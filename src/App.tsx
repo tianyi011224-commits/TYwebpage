@@ -20,7 +20,7 @@ type CartLine = {
 
 type CartState = Record<string, number>;
 
-const CART_STORAGE_KEY = "codex-fresh-cart";
+const CART_STORAGE_KEY = "ty-shop-cart";
 const ALL_CATEGORY = "全部";
 
 function formatCurrency(value: number) {
@@ -49,7 +49,9 @@ function App() {
   >(ALL_CATEGORY);
   const [cart, setCart] = useState<CartState>(() => readCart());
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [submitState, setSubmitState] = useState<"idle" | "sent">("idle");
+  const [submitState, setSubmitState] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
 
   useEffect(() => {
     window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
@@ -99,6 +101,7 @@ function App() {
 
   function addToCart(product: Product) {
     updateQuantity(product.id, (cart[product.id] ?? 0) + 1);
+    setSubmitState("idle");
     setIsCartOpen(true);
   }
 
@@ -107,16 +110,35 @@ function App() {
     setSubmitState("idle");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     if (itemCount === 0) {
-      event.preventDefault();
       setIsCartOpen(true);
       return;
     }
 
-    setSubmitState("sent");
-    window.localStorage.removeItem(CART_STORAGE_KEY);
-    setCart({});
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const encodedData = new URLSearchParams();
+    formData.forEach((value, key) => {
+      encodedData.append(key, String(value));
+    });
+    setSubmitState("sending");
+
+    try {
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodedData.toString(),
+      });
+      window.localStorage.removeItem(CART_STORAGE_KEY);
+      form.reset();
+      setCart({});
+      setSubmitState("sent");
+    } catch {
+      setSubmitState("error");
+    }
   }
 
   return (
@@ -149,7 +171,7 @@ function App() {
             <p className="eyebrow">当日优选 · 社区配送 · 到货再确认</p>
             <h1>每日鲜达</h1>
             <p>
-              新鲜蔬菜、水果和家庭组合套餐，一站式加入购物车，留下联系方式后由店主确认配送和付款。
+              新鲜蔬菜、水果和家庭组合套餐，一站式加入购物车。留下联系方式后，店主会确认配送时间、库存和付款方式。
             </p>
             <div className="hero-actions">
               <a className="primary-link" href="#products">
@@ -259,6 +281,12 @@ function App() {
                 <h3>订单意向已提交</h3>
                 <p>店主收到后会尽快联系你确认配送和付款。</p>
               </>
+            ) : submitState === "error" ? (
+              <>
+                <ShoppingBasket size={42} aria-hidden="true" />
+                <h3>提交失败</h3>
+                <p>请检查网络后重新提交，或直接联系店主下单。</p>
+              </>
             ) : (
               <>
                 <ShoppingBasket size={42} aria-hidden="true" />
@@ -347,6 +375,7 @@ function App() {
                   name="customerName"
                   type="text"
                   placeholder="收货人姓名"
+                  autoComplete="name"
                   required
                 />
               </label>
@@ -356,6 +385,7 @@ function App() {
                   name="contact"
                   type="text"
                   placeholder="用于确认订单"
+                  autoComplete="tel"
                   required
                 />
               </label>
@@ -365,6 +395,7 @@ function App() {
                   name="address"
                   type="text"
                   placeholder="小区、街道或详细地址"
+                  autoComplete="street-address"
                   required
                 />
               </label>
@@ -385,8 +416,12 @@ function App() {
                   <Trash2 size={17} aria-hidden="true" />
                   清空
                 </button>
-                <button className="submit-button" type="submit">
-                  提交订单意向
+                <button
+                  className="submit-button"
+                  type="submit"
+                  disabled={submitState === "sending"}
+                >
+                  {submitState === "sending" ? "提交中" : "提交订单意向"}
                   <ChevronRight size={18} aria-hidden="true" />
                 </button>
               </div>

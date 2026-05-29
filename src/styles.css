@@ -36,6 +36,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -384,6 +389,7 @@ img {
   display: grid;
   gap: 12px;
   margin: 16px 0;
+  min-height: 0;
   overflow: auto;
   padding-right: 4px;
 }
@@ -596,7 +602,7 @@ img {
   }
 
   .hero h1 {
-    font-size: 3.4rem;
+    font-size: 3rem;
   }
 
   .hero p:not(.eyebrow) {
@@ -623,6 +629,11 @@ img {
     max-width: none;
     padding: 14px;
     width: 100vw;
+  }
+
+  .checkout-form input,
+  .checkout-form textarea {
+    font-size: 16px;
   }
 
   .cart-line {
