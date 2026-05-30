@@ -27,7 +27,7 @@ export const products: Product[] = [
     unit: "斤",
     image:
       "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=80",
-    description: "清甜脆爽，适合办公室、家庭日常补给。",
+    description: "清甜脆爽，产地分级供应，适合家庭、办公室与礼盒组合。",
     featured: true,
   },
   {
@@ -38,7 +38,7 @@ export const products: Product[] = [
     unit: "斤",
     image:
       "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=900&q=80",
-    description: "果汁充足，酸甜平衡，现摘分级装箱。",
+    description: "果汁充足，酸甜平衡，按批次筛选并安排新鲜配送。",
     featured: true,
   },
   {
@@ -49,7 +49,7 @@ export const products: Product[] = [
     unit: "斤",
     image:
       "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80",
-    description: "自然熟化，口感绵密，早餐和烘焙都合适。",
+    description: "自然熟化，口感绵密，适合日常补给和团体采购。",
     featured: false,
   },
   {
@@ -60,7 +60,7 @@ export const products: Product[] = [
     unit: "盒",
     image:
       "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=900&q=80",
-    description: "果香浓郁，颗粒饱满，到家即可食用。",
+    description: "颗粒饱满，果香明显，适合高品质鲜果订单。",
     featured: false,
   },
   {
@@ -71,7 +71,7 @@ export const products: Product[] = [
     unit: "斤",
     image:
       "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=900&q=80",
-    description: "适合凉拌、煮汤和家常炒菜，酸甜有番茄味。",
+    description: "适合凉拌、煮汤和家常炒菜，批量采购可提前确认规格。",
     featured: true,
   },
   {
@@ -82,7 +82,7 @@ export const products: Product[] = [
     unit: "颗",
     image:
       "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=900&q=80",
-    description: "叶片鲜嫩，适合沙拉、火锅和轻食便当。",
+    description: "叶片鲜嫩，适合沙拉、轻食门店与家庭日常餐桌。",
     featured: false,
   },
   {
@@ -93,7 +93,7 @@ export const products: Product[] = [
     unit: "颗",
     image:
       "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=900&q=80",
-    description: "花球紧实，清炒、蒸煮、健身餐都很稳。",
+    description: "花球紧实，适合餐饮备货、家庭配送和健康餐组合。",
     featured: false,
   },
   {
@@ -104,7 +104,7 @@ export const products: Product[] = [
     unit: "斤",
     image:
       "https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=900&q=80",
-    description: "脆甜耐放，炖汤、炒菜、榨汁都好用。",
+    description: "耐储存、易搭配，适合长期稳定采购与组合配送。",
     featured: false,
   },
   {
@@ -115,7 +115,7 @@ export const products: Product[] = [
     unit: "箱",
     image:
       "https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=900&q=80",
-    description: "含 4 款水果、6 款蔬菜，适合 2-3 人家庭。",
+    description: "含多款水果和蔬菜，适合 2-3 人家庭的周期性补给。",
     featured: true,
   },
   {
@@ -126,7 +126,7 @@ export const products: Product[] = [
     unit: "箱",
     image:
       "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=900&q=80",
-    description: "多种易分食水果组合，适合团队下午茶。",
+    description: "多种易分食水果组合，适合企业下午茶和团队福利。",
     featured: false,
   },
 ];

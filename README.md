@@ -1,6 +1,8 @@
-# 每日鲜达购物网站
+# TIAN YI INTERNATIONAL TRADING PTE. LTD 购物网站
 
-这是一个支持手机和电脑访问的蔬菜水果购物网站。顾客可以浏览商品、加入购物车、填写联系方式并提交订单意向。
+这是 TIAN YI INTERNATIONAL TRADING PTE. LTD 的购物网站，支持手机和电脑访问。顾客可以浏览商品、加入购物车、填写联系方式并提交订单意向。
+
+网站包含公司介绍、商品分类、购物车和 Netlify 表单收单功能。
 
 ## 本地运行
 
