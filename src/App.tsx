@@ -29,6 +29,18 @@ type CartLine = {
 
 type CartState = Record<string, number>;
 
+type OrderApiResponse = {
+  order: {
+    orderNumber: string;
+  };
+  packingSlipHtml: string;
+  invoiceHtml: string;
+  email?: {
+    sent: boolean;
+    reason?: string;
+  };
+};
+
 const CART_STORAGE_KEY = "ty-shop-cart";
 const ALL_CATEGORY = "全部";
 
@@ -107,6 +119,7 @@ function App() {
   const [submitState, setSubmitState] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
+  const [lastOrderNumber, setLastOrderNumber] = useState("");
 
   useEffect(() => {
     window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
@@ -157,12 +170,14 @@ function App() {
   function addToCart(product: Product) {
     updateQuantity(product.id, (cart[product.id] ?? 0) + 1);
     setSubmitState("idle");
+    setLastOrderNumber("");
     setIsCartOpen(true);
   }
 
   function clearCart() {
     setCart({});
     setSubmitState("idle");
+    setLastOrderNumber("");
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -175,13 +190,47 @@ function App() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const encodedData = new URLSearchParams();
-    formData.forEach((value, key) => {
-      encodedData.append(key, String(value));
-    });
     setSubmitState("sending");
 
     try {
+      const orderResponse = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName: formData.get("customerName"),
+          contact: formData.get("contact"),
+          address: formData.get("address"),
+          notes: formData.get("notes"),
+          orderTotal: Number(orderTotal.toFixed(2)),
+          items: cartLines.map((line) => ({
+            id: line.product.id,
+            name: line.product.name,
+            price: line.product.price,
+            unit: line.product.unit,
+            quantity: line.quantity,
+          })),
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        throw new Error(await orderResponse.text());
+      }
+
+      const orderResult = (await orderResponse.json()) as OrderApiResponse;
+      const encodedData = new URLSearchParams();
+      formData.forEach((value, key) => {
+        encodedData.append(key, String(value));
+      });
+      encodedData.append("orderNumber", orderResult.order.orderNumber);
+      encodedData.append("packingSlipHtml", orderResult.packingSlipHtml);
+      encodedData.append("invoiceHtml", orderResult.invoiceHtml);
+      encodedData.append(
+        "emailStatus",
+        orderResult.email?.sent
+          ? "sent"
+          : `not sent: ${orderResult.email?.reason ?? "email service is not configured"}`,
+      );
+
       await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -190,6 +239,7 @@ function App() {
       window.localStorage.removeItem(CART_STORAGE_KEY);
       form.reset();
       setCart({});
+      setLastOrderNumber(orderResult.order.orderNumber);
       setSubmitState("sent");
     } catch {
       setSubmitState("error");
@@ -442,7 +492,12 @@ function App() {
               <>
                 <CheckCircle2 size={42} aria-hidden="true" />
                 <h3>订单意向已提交</h3>
-                <p>工作人员收到后会尽快联系你确认配送和付款。</p>
+                <p>
+                  {lastOrderNumber
+                    ? `订单编号：${lastOrderNumber}。`
+                    : ""}
+                  工作人员收到后会尽快联系你确认配送和付款。
+                </p>
               </>
             ) : submitState === "error" ? (
               <>
@@ -520,6 +575,11 @@ function App() {
               onSubmit={handleSubmit}
             >
               <input type="hidden" name="form-name" value="fresh-order" />
+              <input
+                type="hidden"
+                name="subject"
+                value="TIAN YI INTERNATIONAL TRADING PTE. LTD 新订单"
+              />
               <p className="hidden-field">
                 <label>
                   不要填写：

@@ -12,6 +12,7 @@
   <body>
     <form name="fresh-order" netlify netlify-honeypot="bot-field" hidden>
       <input type="hidden" name="form-name" value="fresh-order" />
+      <input type="hidden" name="subject" />
       <input name="bot-field" />
       <input name="customerName" />
       <input name="contact" />
@@ -19,6 +20,10 @@
       <textarea name="notes"></textarea>
       <textarea name="cartItems"></textarea>
       <input name="orderTotal" />
+      <input name="orderNumber" />
+      <textarea name="packingSlipHtml"></textarea>
+      <textarea name="invoiceHtml"></textarea>
+      <input name="emailStatus" />
     </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
