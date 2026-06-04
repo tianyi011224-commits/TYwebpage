@@ -1,3 +1,6 @@
+import { connectLambda, getStore } from "@netlify/blobs";
+import { saveOrderToDatabase } from "./order-db.mjs";
+
 const COMPANY_NAME = "TIAN YI INTERNATIONAL TRADING PTE. LTD";
 const ORDER_EMAIL_TO = "tianyi011224@gmail.com";
 
@@ -11,17 +14,11 @@ function escapeHtml(value = "") {
 }
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat("zh-CN", {
-    style: "currency",
-    currency: "CNY",
-  }).format(Number(value || 0));
+  return `SGD ${Number(value || 0).toFixed(2)}`;
 }
 
 function createOrderNumber(now = new Date()) {
-  const date = now
-    .toISOString()
-    .slice(0, 10)
-    .replaceAll("-", "");
+  const date = now.toISOString().slice(0, 10).replaceAll("-", "");
   const suffix = `${now.getTime()}`.slice(-5);
   return `TY-${date}-${suffix}`;
 }
@@ -45,133 +42,207 @@ function normalizeItems(items) {
     .filter((item) => item.name && item.quantity > 0);
 }
 
-function documentStyles() {
-  return `
-    <style>
-      body { color: #1d2a22; font-family: Arial, "Microsoft YaHei", sans-serif; line-height: 1.55; margin: 0; padding: 24px; }
-      h1 { font-size: 24px; margin: 0 0 8px; }
-      h2 { font-size: 18px; margin: 26px 0 10px; }
-      p { margin: 4px 0; }
-      .meta { background: #f2f7f1; border: 1px solid #dfeade; padding: 14px; }
-      table { border-collapse: collapse; margin-top: 12px; width: 100%; }
-      th, td { border: 1px solid #d7e2d6; padding: 9px; text-align: left; vertical-align: top; }
-      th { background: #edf6ee; }
-      .total { font-size: 18px; font-weight: 700; text-align: right; }
-      .muted { color: #607166; }
-    </style>
-  `;
+function wrapText(text, maxChars = 72) {
+  const input = String(text || "");
+  const lines = [];
+  let current = "";
+
+  for (const char of input) {
+    const weight = char.charCodeAt(0) > 255 ? 2 : 1;
+    const currentWeight = [...current].reduce(
+      (sum, item) => sum + (item.charCodeAt(0) > 255 ? 2 : 1),
+      0,
+    );
+
+    if (currentWeight + weight > maxChars && current) {
+      lines.push(current);
+      current = char;
+    } else {
+      current += char;
+    }
+  }
+
+  if (current) lines.push(current);
+  return lines.length ? lines : [""];
 }
 
-function itemRows(items, includePrice) {
-  return items
+function toPdfHex(text) {
+  const bytes = Buffer.from(String(text), "utf16le");
+  let hex = "FEFF";
+  for (let index = 0; index < bytes.length; index += 2) {
+    hex += bytes[index + 1].toString(16).padStart(2, "0").toUpperCase();
+    hex += bytes[index].toString(16).padStart(2, "0").toUpperCase();
+  }
+  return `<${hex}>`;
+}
+
+function pdfTextLine(text, x, y, size = 10) {
+  return `BT /F1 ${size} Tf ${x} ${y} Td ${toPdfHex(text)} Tj ET`;
+}
+
+function createSimplePdf({ title, subtitle, sections }) {
+  const pageWidth = 595;
+  const pageHeight = 842;
+  const lines = [];
+  let y = 800;
+
+  lines.push(pdfTextLine(title, 42, y, 16));
+  y -= 22;
+  lines.push(pdfTextLine(subtitle, 42, y, 10));
+  y -= 28;
+
+  for (const section of sections) {
+    if (y < 90) break;
+    lines.push(pdfTextLine(section.heading, 42, y, 12));
+    y -= 18;
+
+    for (const row of section.rows) {
+      for (const line of wrapText(row, 84)) {
+        if (y < 52) break;
+        lines.push(pdfTextLine(line, 54, y, 9));
+        y -= 14;
+      }
+      y -= 2;
+    }
+    y -= 10;
+  }
+
+  const stream = lines.join("\n");
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 4 0 R >> >> /Contents 8 0 R >>`,
+    "<< /Type /Font /Subtype /Type0 /BaseFont /STSong-Light /Encoding /UniGB-UCS2-H /DescendantFonts [5 0 R] >>",
+    "<< /Type /Font /Subtype /CIDFontType0 /BaseFont /STSong-Light /CIDSystemInfo << /Registry (Adobe) /Ordering (GB1) /Supplement 5 >> /FontDescriptor 6 0 R >>",
+    "<< /Type /FontDescriptor /FontName /STSong-Light /Flags 6 /FontBBox [-260 -174 1043 826] /ItalicAngle 0 /Ascent 752 /Descent -271 /CapHeight 737 /StemV 58 >>",
+    "<< /Producer (TIAN YI Order Function) >>",
+    `<< /Length ${Buffer.byteLength(stream, "utf8")} >>\nstream\n${stream}\nendstream`,
+  ];
+
+  let pdf = "%PDF-1.4\n";
+  const offsets = [0];
+  objects.forEach((object, index) => {
+    offsets.push(Buffer.byteLength(pdf, "utf8"));
+    pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+  });
+
+  const xrefOffset = Buffer.byteLength(pdf, "utf8");
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  offsets.slice(1).forEach((offset) => {
+    pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
+  });
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R /Info 7 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+  return Buffer.from(pdf, "utf8");
+}
+
+function createPackingSlipPdf(order) {
+  return createSimplePdf({
+    title: `${COMPANY_NAME} Packing Slip`,
+    subtitle: order.orderNumber,
+    sections: [
+      {
+        heading: "Order Information",
+        rows: [
+          `Order No.: ${order.orderNumber}`,
+          `Date: ${order.createdAt}`,
+          `Customer: ${order.customerName}`,
+          `Contact: ${order.contact}`,
+          `Address: ${order.address}`,
+          `Notes: ${order.notes || "None"}`,
+        ],
+      },
+      {
+        heading: "Items to Pack",
+        rows: order.items.map(
+          (item, index) =>
+            `${index + 1}. ${item.name} | Qty: ${item.quantity} ${item.unit} | SKU: ${item.id}`,
+        ),
+      },
+    ],
+  });
+}
+
+function createInvoiceSpreadsheet(order) {
+  const rows = [
+    ["Invoice No.", order.orderNumber],
+    ["Company", COMPANY_NAME],
+    ["Date", order.createdAt],
+    ["Customer", order.customerName],
+    ["Contact", order.contact],
+    ["Address", order.address],
+    [],
+    ["#", "Item", "Qty", "Unit", "Unit Price (SGD)", "Subtotal (SGD)"],
+    ...order.items.map((item, index) => [
+      index + 1,
+      item.name,
+      item.quantity,
+      item.unit,
+      item.price,
+      item.subtotal,
+    ]),
+    [],
+    ["Total (SGD)", "", "", "", "", order.orderTotal],
+    [],
+    ["Notes", "This invoice is editable in Microsoft Excel."],
+    ["Payment", "Final payment and delivery arrangements are subject to confirmation by TIAN YI."],
+  ];
+
+  const tableRows = rows
     .map(
-      (item, index) => `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${escapeHtml(item.name)}</td>
-          <td>${escapeHtml(item.quantity)} ${escapeHtml(item.unit)}</td>
-          ${
-            includePrice
-              ? `<td>${formatCurrency(item.price)}</td><td>${formatCurrency(item.subtotal)}</td>`
-              : ""
-          }
-        </tr>
-      `,
+      (row) => `
+        <Row>
+          ${row
+            .map((cell) => {
+              const isNumber = typeof cell === "number";
+              return `<Cell><Data ss:Type="${isNumber ? "Number" : "String"}">${escapeHtml(cell)}</Data></Cell>`;
+            })
+            .join("")}
+        </Row>`,
     )
     .join("");
+
+  const workbook = `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook
+  xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Worksheet ss:Name="Invoice">
+    <Table>${tableRows}</Table>
+  </Worksheet>
+</Workbook>`;
+
+  return Buffer.from(workbook, "utf8");
 }
 
-function createPackingSlip(order) {
-  return `<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <title>配货单 ${escapeHtml(order.orderNumber)}</title>
-    ${documentStyles()}
-  </head>
-  <body>
-    <h1>${COMPANY_NAME} 配货单</h1>
-    <p class="muted">Packing Slip</p>
-    <div class="meta">
-      <p><strong>订单编号：</strong>${escapeHtml(order.orderNumber)}</p>
-      <p><strong>下单时间：</strong>${escapeHtml(order.createdAt)}</p>
-      <p><strong>客户：</strong>${escapeHtml(order.customerName)}</p>
-      <p><strong>联系方式：</strong>${escapeHtml(order.contact)}</p>
-      <p><strong>配送地址：</strong>${escapeHtml(order.address)}</p>
-      <p><strong>备注：</strong>${escapeHtml(order.notes || "无")}</p>
-    </div>
-    <h2>配货明细</h2>
-    <table>
-      <thead>
-        <tr><th>#</th><th>商品</th><th>数量</th></tr>
-      </thead>
-      <tbody>${itemRows(order.items, false)}</tbody>
-    </table>
-  </body>
-</html>`;
-}
-
-function createInvoice(order) {
-  return `<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <title>Invoice ${escapeHtml(order.orderNumber)}</title>
-    ${documentStyles()}
-  </head>
-  <body>
-    <h1>${COMPANY_NAME} Invoice</h1>
-    <p class="muted">订单发票 / Invoice</p>
-    <div class="meta">
-      <p><strong>Invoice No.：</strong>${escapeHtml(order.orderNumber)}</p>
-      <p><strong>Date：</strong>${escapeHtml(order.createdAt)}</p>
-      <p><strong>Bill To：</strong>${escapeHtml(order.customerName)}</p>
-      <p><strong>Contact：</strong>${escapeHtml(order.contact)}</p>
-      <p><strong>Address：</strong>${escapeHtml(order.address)}</p>
-    </div>
-    <h2>Items</h2>
-    <table>
-      <thead>
-        <tr><th>#</th><th>Item</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr>
-      </thead>
-      <tbody>${itemRows(order.items, true)}</tbody>
-    </table>
-    <p class="total">Total: ${formatCurrency(order.orderTotal)}</p>
-  </body>
-</html>`;
-}
-
-function createEmailHtml(order, packingSlipHtml, invoiceHtml) {
+function createEmailHtml(order) {
   return `<!doctype html>
 <html lang="zh-CN">
   <body style="font-family: Arial, 'Microsoft YaHei', sans-serif; color: #1d2a22;">
-    <h2>${COMPANY_NAME} 新订单</h2>
-    <p><strong>订单编号：</strong>${escapeHtml(order.orderNumber)}</p>
-    <p><strong>客户：</strong>${escapeHtml(order.customerName)}</p>
-    <p><strong>联系方式：</strong>${escapeHtml(order.contact)}</p>
-    <p><strong>地址：</strong>${escapeHtml(order.address)}</p>
-    <p><strong>总金额：</strong>${formatCurrency(order.orderTotal)}</p>
-    <p><strong>备注：</strong>${escapeHtml(order.notes || "无")}</p>
-    <h3>商品</h3>
+    <h2>${COMPANY_NAME} New Order</h2>
+    <p><strong>Order No.:</strong> ${escapeHtml(order.orderNumber)}</p>
+    <p><strong>Customer:</strong> ${escapeHtml(order.customerName)}</p>
+    <p><strong>Contact:</strong> ${escapeHtml(order.contact)}</p>
+    <p><strong>Address:</strong> ${escapeHtml(order.address)}</p>
+    <p><strong>Total:</strong> ${escapeHtml(formatCurrency(order.orderTotal))}</p>
+    <p><strong>Notes:</strong> ${escapeHtml(order.notes || "None")}</p>
+    <h3>Items</h3>
     <ul>
       ${order.items
         .map(
           (item) =>
-            `<li>${escapeHtml(item.name)} x ${escapeHtml(item.quantity)} ${escapeHtml(item.unit)} - ${formatCurrency(item.subtotal)}</li>`,
+            `<li>${escapeHtml(item.name)} x ${escapeHtml(item.quantity)} ${escapeHtml(item.unit)} - ${escapeHtml(formatCurrency(item.subtotal))}</li>`,
         )
         .join("")}
     </ul>
-    <hr />
-    <h3>配货单</h3>
-    ${packingSlipHtml}
-    <hr />
-    <h3>Invoice</h3>
-    ${invoiceHtml}
+    <p>The packing slip PDF and editable Invoice Excel file are attached.</p>
   </body>
 </html>`;
 }
 
-async function sendOrderEmail(order, packingSlipHtml, invoiceHtml) {
+async function sendOrderEmail(order, packingSlipPdf, invoiceSpreadsheet) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return { sent: false, reason: "RESEND_API_KEY is not configured" };
@@ -189,8 +260,18 @@ async function sendOrderEmail(order, packingSlipHtml, invoiceHtml) {
     body: JSON.stringify({
       from,
       to,
-      subject: `${COMPANY_NAME} 新订单 ${order.orderNumber}`,
-      html: createEmailHtml(order, packingSlipHtml, invoiceHtml),
+      subject: `${COMPANY_NAME} New Order ${order.orderNumber}`,
+      html: createEmailHtml(order),
+      attachments: [
+        {
+          filename: `packing-slip-${order.orderNumber}.pdf`,
+          content: packingSlipPdf.toString("base64"),
+        },
+        {
+          filename: `invoice-${order.orderNumber}.xls`,
+          content: invoiceSpreadsheet.toString("base64"),
+        },
+      ],
     }),
   });
 
@@ -202,6 +283,27 @@ async function sendOrderEmail(order, packingSlipHtml, invoiceHtml) {
   }
 
   return { sent: true };
+}
+
+async function saveOrder(event, record) {
+  try {
+    connectLambda(event);
+    const store = getStore("orders");
+    await store.setJSON(`orders/${record.order.orderNumber}.json`, record, {
+      metadata: {
+        orderNumber: record.order.orderNumber,
+        customerName: record.order.customerName,
+        createdAt: record.order.createdAt,
+        status: record.status,
+      },
+    });
+    return { saved: true };
+  } catch (error) {
+    return {
+      saved: false,
+      reason: error instanceof Error ? error.message : String(error),
+    };
+  }
 }
 
 export async function handler(event) {
@@ -252,18 +354,35 @@ export async function handler(event) {
       orderTotal,
     };
 
-    const packingSlipHtml = createPackingSlip(order);
-    const invoiceHtml = createInvoice(order);
-    const email = await sendOrderEmail(order, packingSlipHtml, invoiceHtml);
+    const packingSlipPdf = createPackingSlipPdf(order);
+    const invoiceSpreadsheet = createInvoiceSpreadsheet(order);
+    const email = await sendOrderEmail(order, packingSlipPdf, invoiceSpreadsheet);
+    const record = {
+      order,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+      packingSlipPdfBase64: packingSlipPdf.toString("base64"),
+      invoiceSpreadsheetBase64: invoiceSpreadsheet.toString("base64"),
+      packingSlipFilename: `packing-slip-${order.orderNumber}.pdf`,
+      invoiceFilename: `invoice-${order.orderNumber}.xls`,
+      email,
+    };
+    let storage = await saveOrderToDatabase(record);
+    if (!storage.saved) {
+      storage = await saveOrder(event, record);
+    }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         order,
-        packingSlipHtml,
-        invoiceHtml,
+        packingSlipPdfBase64: record.packingSlipPdfBase64,
+        invoiceSpreadsheetBase64: record.invoiceSpreadsheetBase64,
+        packingSlipFilename: record.packingSlipFilename,
+        invoiceFilename: record.invoiceFilename,
         email,
+        storage,
       }),
     };
   } catch (error) {

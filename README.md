@@ -49,9 +49,10 @@ TIAN YI 的订单收件邮箱：`tianyi011224@gmail.com`
 - 接口地址：`/api/orders`
 - 函数文件：`netlify/functions/create-order.mjs`
 - 自动生成订单编号，例如 `TY-20260604-12345`
-- 自动生成配货单 HTML
-- 自动生成 Invoice HTML
-- 自动把订单编号、配货单、Invoice 和邮件状态写入 Netlify Forms
+- 自动生成配货单 PDF
+- 自动生成可编辑的 Invoice Excel 文件（`.xls`）
+- 自动把订单编号、配货单 PDF、Invoice Excel 文件名/base64 内容和邮件状态写入 Netlify Forms
+- 如果已配置 Resend，会把配货单 PDF 和 Invoice Excel 文件作为附件发送到订单邮箱
 
 邮件发送使用 Resend API。要让订单真正自动发到 TIAN YI 邮箱，需要在 Netlify 项目里配置环境变量：
 
@@ -61,4 +62,33 @@ ORDER_EMAIL_TO=tianyi011224@gmail.com
 ORDER_EMAIL_FROM=你在 Resend 验证过的发件邮箱
 ```
 
-如果暂时没有配置 `RESEND_API_KEY`，网站仍然可以提交订单，也会生成订单编号、配货单和 Invoice，并保存到 Netlify Forms；只是不会自动发送邮件。
+如果暂时没有配置 `RESEND_API_KEY`，网站仍然可以提交订单，也会生成订单编号、配货单 PDF 和 Invoice Excel 文件，并保存到 Netlify Forms；只是不会自动发送邮件。
+
+## 订单数据库和管理后台
+
+项目已经加入订单管理后台：
+
+- 后台地址：`/admin`
+- 后台 API：`/api/admin-orders`
+- 订单优先保存到 Supabase PostgreSQL 数据库
+- 如果 Supabase 环境变量未配置，订单会临时保存到 Netlify Blobs 的 `orders` store
+- 后台支持查看订单列表、搜索客户/电话/地址、查看订单详情、更新订单状态、下载配货单 PDF、下载 Invoice Excel
+
+后台密码通过 Netlify 环境变量 `ADMIN_PASSWORD` 配置，不写入代码。
+
+### Supabase 配置
+
+1. 在 Supabase 创建一个项目。
+2. 打开 Supabase 的 SQL Editor。
+3. 执行项目根目录的 `supabase-schema.sql`。
+4. 在 Supabase 项目设置里复制：
+   - Project URL
+   - service_role key
+5. 在 Netlify 环境变量里配置：
+
+```text
+SUPABASE_URL=你的 Supabase Project URL
+SUPABASE_SERVICE_ROLE_KEY=你的 Supabase service_role key
+```
+
+`SUPABASE_SERVICE_ROLE_KEY` 必须只放在 Netlify 环境变量里，不能写入前端代码。

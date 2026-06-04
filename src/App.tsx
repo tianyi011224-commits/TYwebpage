@@ -6,11 +6,17 @@ import {
   ChevronLeft,
   ChevronRight,
   ClipboardCheck,
+  Download,
+  FileSpreadsheet,
+  FileText,
   Globe2,
   Leaf,
+  Lock,
   Minus,
   PackageCheck,
   Plus,
+  RefreshCw,
+  Search,
   ShieldCheck,
   ShoppingBasket,
   Store,
@@ -33,15 +39,74 @@ type OrderApiResponse = {
   order: {
     orderNumber: string;
   };
-  packingSlipHtml: string;
-  invoiceHtml: string;
+  packingSlipPdfBase64: string;
+  invoiceSpreadsheetBase64: string;
+  packingSlipFilename: string;
+  invoiceFilename: string;
   email?: {
     sent: boolean;
     reason?: string;
   };
 };
 
+type AdminOrderSummary = {
+  orderNumber: string;
+  createdAt: string;
+  displayDate: string;
+  customerName: string;
+  contact: string;
+  address: string;
+  orderTotal: number;
+  itemCount: number;
+  status: string;
+  statusLabel: string;
+  emailSent: boolean;
+  packingSlipFilename: string;
+  invoiceFilename: string;
+};
+
+type AdminOrderRecord = {
+  order: {
+    order: {
+      orderNumber: string;
+      createdAt: string;
+      customerName: string;
+      contact: string;
+      address: string;
+      notes: string;
+      orderTotal: number;
+      items: Array<{
+        id: string;
+        name: string;
+        quantity: number;
+        unit: string;
+        price: number;
+        subtotal: number;
+      }>;
+    };
+    status: string;
+    packingSlipPdfBase64: string;
+    invoiceSpreadsheetBase64: string;
+    packingSlipFilename: string;
+    invoiceFilename: string;
+    email?: {
+      sent: boolean;
+      reason?: string;
+    };
+  };
+};
+
 const CART_STORAGE_KEY = "ty-shop-cart";
+const ADMIN_PASSWORD_STORAGE_KEY = "ty-admin-password";
+
+const orderStatuses = [
+  { value: "pending", label: "待确认" },
+  { value: "confirmed", label: "已确认" },
+  { value: "packing", label: "配货中" },
+  { value: "shipped", label: "已发货" },
+  { value: "completed", label: "已完成" },
+  { value: "cancelled", label: "已取消" },
+];
 const ALL_CATEGORY = "全部";
 
 const companyStats = [
@@ -90,10 +155,400 @@ const serviceScenes = [
   "定制化组合套餐",
 ];
 
+function downloadBase64File(base64: string, filename: string, mimeType: string) {
+  const byteCharacters = window.atob(base64);
+  const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
+  const blob = new Blob([new Uint8Array(byteNumbers)], { type: mimeType });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+function AdminDashboard() {
+  const [password, setPassword] = useState(
+    () => window.sessionStorage.getItem(ADMIN_PASSWORD_STORAGE_KEY) ?? "",
+  );
+  const [inputPassword, setInputPassword] = useState(password);
+  const [orders, setOrders] = useState<AdminOrderSummary[]>([]);
+  const [selectedOrderNumber, setSelectedOrderNumber] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState<AdminOrderRecord["order"] | null>(
+    null,
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const filteredOrders = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return orders;
+    return orders.filter((order) =>
+      [
+        order.orderNumber,
+        order.customerName,
+        order.contact,
+        order.address,
+        order.statusLabel,
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(term),
+    );
+  }, [orders, searchTerm]);
+
+  const stats = useMemo(() => {
+    const total = orders.reduce((sum, order) => sum + order.orderTotal, 0);
+    return {
+      count: orders.length,
+      pending: orders.filter((order) => order.status === "pending").length,
+      total,
+    };
+  }, [orders]);
+
+  async function adminFetch(path: string, options: RequestInit = {}) {
+    const response = await fetch(path, {
+      ...options,
+      headers: {
+        ...(options.headers ?? {}),
+        "X-Admin-Password": password,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error((await response.json()).error ?? "后台请求失败");
+    }
+
+    return response.json();
+  }
+
+  async function loadOrders(nextPassword = password) {
+    if (!nextPassword) return;
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/admin-orders", {
+        headers: { "X-Admin-Password": nextPassword },
+      });
+      if (!response.ok) {
+        throw new Error((await response.json()).error ?? "无法读取订单");
+      }
+      const data = (await response.json()) as { orders: AdminOrderSummary[] };
+      setOrders(data.orders);
+      if (data.orders[0] && !selectedOrderNumber) {
+        setSelectedOrderNumber(data.orders[0].orderNumber);
+      }
+      setPassword(nextPassword);
+      window.sessionStorage.setItem(ADMIN_PASSWORD_STORAGE_KEY, nextPassword);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "无法读取订单");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function loadOrderDetail(orderNumber: string) {
+    if (!orderNumber || !password) return;
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const data = (await adminFetch(
+        `/api/admin-orders?orderNumber=${encodeURIComponent(orderNumber)}`,
+      )) as AdminOrderRecord;
+      setSelectedOrder(data.order);
+      setSelectedOrderNumber(orderNumber);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "无法读取订单详情");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function updateStatus(orderNumber: string, status: string) {
+    setError("");
+    try {
+      await adminFetch("/api/admin-orders", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderNumber, status }),
+      });
+      await loadOrders();
+      await loadOrderDetail(orderNumber);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "无法更新状态");
+    }
+  }
+
+  async function deleteOrder(orderNumber: string) {
+    const confirmed = window.confirm(
+      `确定删除订单 ${orderNumber} 吗？删除后不能在后台恢复。`,
+    );
+    if (!confirmed) return;
+
+    setError("");
+    setIsLoading(true);
+    try {
+      await adminFetch("/api/admin-orders", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderNumber }),
+      });
+      setSelectedOrder(null);
+      setSelectedOrderNumber("");
+      await loadOrders();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "无法删除订单");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (password) void loadOrders(password);
+  }, []);
+
+  useEffect(() => {
+    if (selectedOrderNumber && password) void loadOrderDetail(selectedOrderNumber);
+  }, [selectedOrderNumber, password]);
+
+  if (!password) {
+    return (
+      <main className="admin-page">
+        <section className="admin-login">
+          <div className="admin-login-mark">
+            <Lock size={28} aria-hidden="true" />
+          </div>
+          <p className="eyebrow">TIAN YI ORDER ADMIN</p>
+          <h1>订单管理后台</h1>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void loadOrders(inputPassword);
+            }}
+          >
+            <label>
+              后台密码
+              <input
+                type="password"
+                value={inputPassword}
+                onChange={(event) => setInputPassword(event.target.value)}
+                placeholder="输入后台密码"
+              />
+            </label>
+            <button className="submit-button" type="submit" disabled={isLoading}>
+              登录后台
+            </button>
+          </form>
+          {error && <p className="admin-error">{error}</p>}
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="admin-page">
+      <header className="admin-header">
+        <div>
+          <p className="eyebrow">TIAN YI ORDER ADMIN</p>
+          <h1>订单管理后台</h1>
+        </div>
+        <div className="admin-actions">
+          <button type="button" onClick={() => void loadOrders()} disabled={isLoading}>
+            <RefreshCw size={17} aria-hidden="true" />
+            刷新
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              window.sessionStorage.removeItem(ADMIN_PASSWORD_STORAGE_KEY);
+              setPassword("");
+              setInputPassword("");
+              setOrders([]);
+              setSelectedOrder(null);
+            }}
+          >
+            退出
+          </button>
+        </div>
+      </header>
+
+      {error && <p className="admin-error">{error}</p>}
+
+      <section className="admin-stats">
+        <div>
+          <span>订单数</span>
+          <strong>{stats.count}</strong>
+        </div>
+        <div>
+          <span>待确认</span>
+          <strong>{stats.pending}</strong>
+        </div>
+        <div>
+          <span>订单金额</span>
+          <strong>{formatCurrency(stats.total)}</strong>
+        </div>
+      </section>
+
+      <section className="admin-layout">
+        <div className="admin-list">
+          <div className="admin-search">
+            <Search size={17} aria-hidden="true" />
+            <input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="搜索订单号、客户、电话、地址"
+            />
+          </div>
+          <div className="admin-orders">
+            {filteredOrders.map((order) => (
+              <button
+                className={
+                  order.orderNumber === selectedOrderNumber ? "active" : ""
+                }
+                key={order.orderNumber}
+                type="button"
+                onClick={() => setSelectedOrderNumber(order.orderNumber)}
+              >
+                <strong>{order.orderNumber}</strong>
+                <span>{order.customerName}</span>
+                <small>
+                  {order.statusLabel} · {formatCurrency(order.orderTotal)}
+                </small>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="admin-detail">
+          {selectedOrder ? (
+            <>
+              <div className="admin-detail-head">
+                <div>
+                  <p className="eyebrow">订单详情</p>
+                  <h2>{selectedOrder.order.orderNumber}</h2>
+                </div>
+                <select
+                  value={selectedOrder.status}
+                  onChange={(event) =>
+                    void updateStatus(
+                      selectedOrder.order.orderNumber,
+                      event.target.value,
+                    )
+                  }
+                >
+                  {orderStatuses.map((status) => (
+                    <option key={status.value} value={status.value}>
+                      {status.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="admin-info-grid">
+                <div>
+                  <span>客户</span>
+                  <strong>{selectedOrder.order.customerName}</strong>
+                </div>
+                <div>
+                  <span>联系方式</span>
+                  <strong>{selectedOrder.order.contact}</strong>
+                </div>
+                <div>
+                  <span>地址</span>
+                  <strong>{selectedOrder.order.address}</strong>
+                </div>
+                <div>
+                  <span>总金额</span>
+                  <strong>{formatCurrency(selectedOrder.order.orderTotal)}</strong>
+                </div>
+              </div>
+
+              <div className="admin-downloads">
+                <button
+                  type="button"
+                  onClick={() =>
+                    downloadBase64File(
+                      selectedOrder.packingSlipPdfBase64,
+                      selectedOrder.packingSlipFilename,
+                      "application/pdf",
+                    )
+                  }
+                >
+                  <FileText size={17} aria-hidden="true" />
+                  下载配货单 PDF
+                  <Download size={16} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    downloadBase64File(
+                      selectedOrder.invoiceSpreadsheetBase64,
+                      selectedOrder.invoiceFilename,
+                      "application/vnd.ms-excel",
+                    )
+                  }
+                >
+                  <FileSpreadsheet size={17} aria-hidden="true" />
+                  下载 Invoice Excel
+                  <Download size={16} aria-hidden="true" />
+                </button>
+                <button
+                  className="danger"
+                  type="button"
+                  onClick={() => void deleteOrder(selectedOrder.order.orderNumber)}
+                  disabled={isLoading}
+                >
+                  <Trash2 size={17} aria-hidden="true" />
+                  删除订单
+                </button>
+              </div>
+
+              <table className="admin-items">
+                <thead>
+                  <tr>
+                    <th>商品</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>小计</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedOrder.order.items.map((item) => (
+                    <tr key={`${item.id}-${item.name}`}>
+                      <td>{item.name}</td>
+                      <td>
+                        {item.quantity} {item.unit}
+                      </td>
+                      <td>{formatCurrency(item.price)}</td>
+                      <td>{formatCurrency(item.subtotal)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className="admin-notes">
+                <span>备注</span>
+                <p>{selectedOrder.order.notes || "无"}</p>
+              </div>
+            </>
+          ) : (
+            <div className="admin-empty">还没有选择订单。</div>
+          )}
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function formatCurrency(value: number) {
-  return new Intl.NumberFormat("zh-CN", {
+  return new Intl.NumberFormat("en-SG", {
     style: "currency",
-    currency: "CNY",
+    currency: "SGD",
   }).format(value);
 }
 
@@ -111,6 +566,10 @@ function readCart(): CartState {
 }
 
 function App() {
+  if (window.location.pathname === "/admin") {
+    return <AdminDashboard />;
+  }
+
   const [activeCategory, setActiveCategory] = useState<
     typeof ALL_CATEGORY | ProductCategory
   >(ALL_CATEGORY);
@@ -222,8 +681,13 @@ function App() {
         encodedData.append(key, String(value));
       });
       encodedData.append("orderNumber", orderResult.order.orderNumber);
-      encodedData.append("packingSlipHtml", orderResult.packingSlipHtml);
-      encodedData.append("invoiceHtml", orderResult.invoiceHtml);
+      encodedData.append("packingSlipFilename", orderResult.packingSlipFilename);
+      encodedData.append("invoiceFilename", orderResult.invoiceFilename);
+      encodedData.append("packingSlipPdfBase64", orderResult.packingSlipPdfBase64);
+      encodedData.append(
+        "invoiceSpreadsheetBase64",
+        orderResult.invoiceSpreadsheetBase64,
+      );
       encodedData.append(
         "emailStatus",
         orderResult.email?.sent
