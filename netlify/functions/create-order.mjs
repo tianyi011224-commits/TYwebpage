@@ -1,8 +1,10 @@
 import { connectLambda, getStore } from "@netlify/blobs";
 import { saveOrderToDatabase } from "./order-db.mjs";
+import { getCatalogProductById } from "./product-catalog.mjs";
 
 const COMPANY_NAME = "TIAN YI INTERNATIONAL TRADING PTE. LTD";
 const ORDER_EMAIL_TO = "tianyi011224@gmail.com";
+const MAX_QUANTITY_PER_ITEM = 999;
 
 function escapeHtml(value = "") {
   return String(value)
@@ -24,22 +26,59 @@ function createOrderNumber(now = new Date()) {
 }
 
 function normalizeItems(items) {
-  if (!Array.isArray(items)) return [];
+  if (!Array.isArray(items)) {
+    return { items: [], unknownProductIds: [], invalidProductIds: [] };
+  }
 
-  return items
-    .map((item) => {
-      const price = Number(item.price || 0);
-      const quantity = Number(item.quantity || 0);
-      return {
-        id: String(item.id || ""),
-        name: String(item.name || ""),
-        price,
-        unit: String(item.unit || ""),
-        quantity,
-        subtotal: Number((price * quantity).toFixed(2)),
-      };
-    })
-    .filter((item) => item.name && item.quantity > 0);
+  const quantitiesById = new Map();
+  const unknownProductIds = new Set();
+  const invalidProductIds = new Set();
+
+  for (const item of items) {
+    const id = String(item?.id || "").trim();
+    const product = getCatalogProductById(id);
+
+    if (!product) {
+      unknownProductIds.add(id || "(missing id)");
+      continue;
+    }
+
+    const quantity = Number(item?.quantity);
+    if (!Number.isFinite(quantity) || quantity <= 0) {
+      invalidProductIds.add(id);
+      continue;
+    }
+
+    const normalizedQuantity = Number(quantity.toFixed(2));
+    const nextQuantity = Number(
+      ((quantitiesById.get(id) || 0) + normalizedQuantity).toFixed(2),
+    );
+    quantitiesById.set(id, nextQuantity);
+  }
+
+  const normalizedItems = [];
+  for (const [id, quantity] of quantitiesById) {
+    if (quantity > MAX_QUANTITY_PER_ITEM) {
+      invalidProductIds.add(id);
+      continue;
+    }
+
+    const product = getCatalogProductById(id);
+    normalizedItems.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      unit: product.unit,
+      quantity,
+      subtotal: Number((product.price * quantity).toFixed(2)),
+    });
+  }
+
+  return {
+    items: normalizedItems,
+    unknownProductIds: [...unknownProductIds],
+    invalidProductIds: [...invalidProductIds],
+  };
 }
 
 function wrapText(text, maxChars = 72) {
@@ -317,13 +356,40 @@ export async function handler(event) {
 
   try {
     const payload = JSON.parse(event.body || "{}");
-    const items = normalizeItems(payload.items);
+    const {
+      items,
+      unknownProductIds,
+      invalidProductIds,
+    } = normalizeItems(payload.items);
 
     if (!payload.customerName || !payload.contact || !payload.address) {
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ error: "Missing customer details" }),
+      };
+    }
+
+    if (unknownProductIds.length > 0) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          error: "Order contains unknown products",
+          productIds: unknownProductIds,
+        }),
+      };
+    }
+
+    if (invalidProductIds.length > 0) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          error: "Order contains invalid item quantities",
+          productIds: invalidProductIds,
+          maxQuantityPerItem: MAX_QUANTITY_PER_ITEM,
+        }),
       };
     }
 
@@ -336,10 +402,7 @@ export async function handler(event) {
     }
 
     const calculatedTotal = items.reduce((sum, item) => sum + item.subtotal, 0);
-    const submittedTotal = Number(payload.orderTotal);
-    const orderTotal = Number(
-      (Number.isFinite(submittedTotal) ? submittedTotal : calculatedTotal).toFixed(2),
-    );
+    const orderTotal = Number(calculatedTotal.toFixed(2));
 
     const order = {
       orderNumber: createOrderNumber(),

@@ -38,6 +38,15 @@ type CartState = Record<string, number>;
 type OrderApiResponse = {
   order: {
     orderNumber: string;
+    orderTotal: number;
+    items: Array<{
+      id: string;
+      name: string;
+      quantity: number;
+      unit: string;
+      price: number;
+      subtotal: number;
+    }>;
   };
   packingSlipPdfBase64: string;
   invoiceSpreadsheetBase64: string;
@@ -678,9 +687,15 @@ function App() {
       const orderResult = (await orderResponse.json()) as OrderApiResponse;
       const encodedData = new URLSearchParams();
       formData.forEach((value, key) => {
+        if (key === "cartItems" || key === "orderTotal") return;
         encodedData.append(key, String(value));
       });
       encodedData.append("orderNumber", orderResult.order.orderNumber);
+      encodedData.append(
+        "cartItems",
+        JSON.stringify(orderResult.order.items, null, 2),
+      );
+      encodedData.append("orderTotal", orderResult.order.orderTotal.toFixed(2));
       encodedData.append("packingSlipFilename", orderResult.packingSlipFilename);
       encodedData.append("invoiceFilename", orderResult.invoiceFilename);
       encodedData.append("packingSlipPdfBase64", orderResult.packingSlipPdfBase64);
