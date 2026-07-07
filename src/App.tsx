@@ -574,10 +574,31 @@ function readCart(): CartState {
   }
 }
 
+type PublicPage = "home" | "company" | "services" | "shop";
+
+function getPublicPage(): PublicPage {
+  switch (window.location.pathname) {
+    case "/company":
+      return "company";
+    case "/services":
+      return "services";
+    case "/shop":
+      return "shop";
+    default:
+      return "home";
+  }
+}
+
 function App() {
   if (window.location.pathname === "/admin") {
     return <AdminDashboard />;
   }
+
+  const page = getPublicPage();
+  const isHome = page === "home";
+  const showCompany = page === "company";
+  const showServices = page === "services";
+  const showShop = page === "shop";
 
   const [activeCategory, setActiveCategory] = useState<
     typeof ALL_CATEGORY | ProductCategory
@@ -743,9 +764,15 @@ function App() {
             </span>
           </a>
           <nav className="site-nav" aria-label="主要导航">
-            <a href="#company">公司实力</a>
-            <a href="#services">服务能力</a>
-            <a href="#products">在线选购</a>
+            <a className={showCompany ? "active" : ""} href="/company">
+              公司实力
+            </a>
+            <a className={showServices ? "active" : ""} href="/services">
+              服务能力
+            </a>
+            <a className={showShop ? "active" : ""} href="/shop">
+              在线选购
+            </a>
           </nav>
           <button
             className="cart-button"
@@ -767,11 +794,11 @@ function App() {
               面向家庭、办公室、社区客户和企业采购需求，提供精选食品、生鲜与日常消费品供应服务。我们从货源组织、订单确认到配送跟进形成闭环，让采购更可靠、更省心。
             </p>
             <div className="hero-actions">
-              <a className="primary-link" href="#company">
+              <a className="primary-link" href="/company">
                 了解公司实力
                 <ChevronRight size={18} aria-hidden="true" />
               </a>
-              <a className="secondary-link" href="#products">
+              <a className="secondary-link" href="/shop">
                 在线选购
               </a>
             </div>
@@ -789,6 +816,25 @@ function App() {
         </div>
       </section>
 
+      {isHome && (
+        <section className="home-overview" aria-label="网站主要页面">
+          <a href="/company">
+            <strong>公司实力</strong>
+            <span>查看公司介绍、贸易资源整合能力和核心优势。</span>
+          </a>
+          <a href="/services">
+            <strong>服务能力</strong>
+            <span>了解从需求确认、供货沟通到配送跟进的服务流程。</span>
+          </a>
+          <a href="/shop">
+            <strong>在线选购</strong>
+            <span>进入商品页面，按分类挑选商品并提交采购订单。</span>
+          </a>
+        </section>
+      )}
+
+      {showCompany && (
+        <>
       <section className="company-section" id="company" aria-labelledby="company-title">
         <div className="company-copy">
           <p className="eyebrow">关于公司</p>
@@ -833,7 +879,10 @@ function App() {
           })}
         </div>
       </section>
+        </>
+      )}
 
+      {showServices && (
       <section className="service-section" id="services" aria-labelledby="service-title">
         <div className="service-copy">
           <p className="eyebrow">服务能力</p>
@@ -866,7 +915,10 @@ function App() {
           </div>
         </div>
       </section>
+      )}
 
+      {showShop && (
+        <>
       <section className="shop-section" id="products">
         <div className="section-heading">
           <div>
@@ -938,6 +990,8 @@ function App() {
           <span>订单提交后由工作人员完成确认与沟通。</span>
         </div>
       </section>
+        </>
+      )}
 
       <aside className={`cart-panel ${isCartOpen ? "open" : ""}`}>
         <div className="cart-header">

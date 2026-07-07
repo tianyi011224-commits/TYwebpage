@@ -113,6 +113,11 @@ img {
   text-decoration: none;
 }
 
+.site-nav a.active,
+.site-nav a:hover {
+  color: #fff;
+}
+
 .cart-button,
 .primary-link,
 .secondary-link,
@@ -238,6 +243,37 @@ img {
   left: 18px;
   padding: 12px 14px;
   position: absolute;
+}
+
+.home-overview {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 54px clamp(18px, 4vw, 64px) 88px;
+}
+
+.home-overview a {
+  background: #fff;
+  border: 1px solid #dfe6e4;
+  border-radius: 8px;
+  box-shadow: 0 18px 42px rgba(21, 33, 58, 0.08);
+  color: #15213a;
+  display: grid;
+  gap: 12px;
+  min-height: 156px;
+  padding: 24px;
+  text-decoration: none;
+}
+
+.home-overview strong {
+  font-size: 1.22rem;
+}
+
+.home-overview span {
+  color: #637086;
+  line-height: 1.65;
 }
 
 .company-section,
@@ -1137,7 +1173,8 @@ img {
 
   .hero,
   .company-section,
-  .service-section {
+  .service-section,
+  .home-overview {
     grid-template-columns: 1fr;
   }
 
