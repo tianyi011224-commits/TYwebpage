@@ -108,6 +108,7 @@ type AdminOrderRecord = {
 const CART_STORAGE_KEY = "ty-shop-cart";
 const ADMIN_PASSWORD_STORAGE_KEY = "ty-admin-password";
 const LANGUAGE_STORAGE_KEY = "ty-site-language";
+const ENABLE_ONLINE_SHOP = false;
 
 type Language = "zh" | "en";
 
@@ -896,7 +897,7 @@ function App() {
 
   const page = getPublicPage();
   const isHome = page === "home";
-  const showShop = page === "shop";
+  const showShop = ENABLE_ONLINE_SHOP && page === "shop";
   const activeCompanyModule = companyProfileModules.find(
     (module) => module.slug === page,
   );
@@ -1099,9 +1100,11 @@ function App() {
                 {module.title[language]}
               </a>
             ))}
-            <a className={showShop ? "active" : ""} href="/shop">
-              {copy.shop}
-            </a>
+            {ENABLE_ONLINE_SHOP && (
+              <a className={showShop ? "active" : ""} href="/shop">
+                {copy.shop}
+              </a>
+            )}
           </nav>
           <div className={`language-switcher ${isLanguageOpen ? "open" : ""}`}>
             <button
@@ -1134,16 +1137,18 @@ function App() {
               </div>
             )}
           </div>
-          <button
-            className="cart-button"
-            type="button"
-            onClick={() => setIsCartOpen(true)}
-            title={copy.cartOpenTitle}
-            aria-label={copy.cartOpenLabel(itemCount)}
-          >
-            <ShoppingBasket size={21} aria-hidden="true" />
-            <span>{itemCount}</span>
-          </button>
+          {ENABLE_ONLINE_SHOP && (
+            <button
+              className="cart-button"
+              type="button"
+              onClick={() => setIsCartOpen(true)}
+              title={copy.cartOpenTitle}
+              aria-label={copy.cartOpenLabel(itemCount)}
+            >
+              <ShoppingBasket size={21} aria-hidden="true" />
+              <span>{itemCount}</span>
+            </button>
+          )}
         </header>
 
         <div className="hero">
@@ -1158,9 +1163,11 @@ function App() {
                 {copy.heroPrimary}
                 <ChevronRight size={18} aria-hidden="true" />
               </a>
-              <a className="secondary-link" href="/shop">
-                {copy.heroSecondary}
-              </a>
+              {ENABLE_ONLINE_SHOP && (
+                <a className="secondary-link" href="/shop">
+                  {copy.heroSecondary}
+                </a>
+              )}
             </div>
           </div>
           <div className="hero-image" aria-label={copy.heroImageLabel}>
@@ -1184,10 +1191,12 @@ function App() {
               <span>{module.summary[language]}</span>
             </a>
           ))}
-          <a href="/shop">
-            <strong>{copy.shop}</strong>
-            <span>{copy.shopSummary}</span>
-          </a>
+          {ENABLE_ONLINE_SHOP && (
+            <a href="/shop">
+              <strong>{copy.shop}</strong>
+              <span>{copy.shopSummary}</span>
+            </a>
+          )}
         </section>
       )}
 
@@ -1221,7 +1230,7 @@ function App() {
                   ))}
                 </ul>
                 {module.cta && (
-                  <a className="template-cta" href="/shop">
+                  <a className="template-cta" href="mailto:tianyi011224@gmail.com">
                     {module.cta[language]}
                     <ChevronRight size={17} aria-hidden="true" />
                   </a>
@@ -1310,6 +1319,7 @@ function App() {
         </>
       )}
 
+      {ENABLE_ONLINE_SHOP && (
       <aside className={`cart-panel ${isCartOpen ? "open" : ""}`}>
         <div className="cart-header">
           <button
@@ -1505,8 +1515,9 @@ function App() {
           </>
         )}
       </aside>
+      )}
 
-      {isCartOpen && (
+      {ENABLE_ONLINE_SHOP && isCartOpen && (
         <button
           className="cart-backdrop"
           type="button"
@@ -1515,6 +1526,7 @@ function App() {
         />
       )}
 
+      {ENABLE_ONLINE_SHOP && (
       <button
         className="mobile-cart-bar"
         type="button"
@@ -1524,6 +1536,7 @@ function App() {
         <span>{copy.mobileItems(itemCount)}</span>
         <strong>{formatCurrency(orderTotal)}</strong>
       </button>
+      )}
     </main>
   );
 }
