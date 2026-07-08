@@ -138,6 +138,20 @@ const companyProfileModules = [
       zh: "用于展示公司基础信息，后续可补充正式介绍文字。",
       en: "Use this section for company background and basic business information.",
     },
+    content: {
+      zh: [
+        "TIAN YI INTERNATIONAL TRADING PTE. LTD（添億公司）成立于2023年，是一家位于新加坡的综合型食品及厨房用品供应公司。公司专注于为本地餐饮企业及船运公司提供稳定、便捷、高效的一站式采购与配送服务。",
+        "我们的主营业务包括新鲜水果、蔬菜、调味品、干货及各类厨房常用物品供应，主要服务于新加坡本地中国餐厅、中餐经营者及相关餐饮客户。凭借灵活的采购渠道和务实的服务方式，我们致力于帮助客户降低采购成本、提升后厨运营效率，并保障日常供应的稳定性。",
+        "同时，TIAN YI INTERNATIONAL TRADING PTE. LTD 也为过往停靠新加坡港口的船舶提供船上伙食及食品物资供应服务。我们可根据船运公司和船员的实际需求，提供蔬果、主副食品、调料及厨房用品等配套供应，协助客户保障船上日常饮食与后勤需求。",
+        "公司秉持“品质稳定、配送及时、服务用心、合作共赢”的经营理念，重视产品新鲜度、供货效率与客户长期合作关系。未来，我们将持续完善供应链与配送能力，为餐厅、船舶及各类企业客户提供更加专业、可靠的供应服务。",
+      ],
+      en: [
+        "TIAN YI INTERNATIONAL TRADING PTE. LTD was established in 2023. Based in Singapore, the company is an integrated supplier of food products and kitchen essentials, focused on providing stable, convenient, and efficient one-stop procurement and delivery services for local food and beverage businesses and shipping companies.",
+        "Our main business includes the supply of fresh fruits, vegetables, seasonings, dry goods, and a wide range of commonly used kitchen items. We mainly serve Chinese restaurants, Chinese food operators, and related F&B customers in Singapore. With flexible procurement channels and a practical service approach, we help customers reduce purchasing costs, improve kitchen operating efficiency, and maintain stable daily supply.",
+        "TIAN YI INTERNATIONAL TRADING PTE. LTD also provides ship provision and food supply services for vessels calling at Singapore ports. Based on the actual needs of shipping companies and crew members, we can supply fruits and vegetables, staple and non-staple food products, condiments, and kitchen supplies to support daily onboard meals and logistics needs.",
+        "Guided by the principles of stable quality, timely delivery, attentive service, and win-win cooperation, the company values product freshness, supply efficiency, and long-term customer relationships. Looking ahead, we will continue to improve our supply chain and delivery capabilities to provide more professional and reliable supply services for restaurants, vessels, and corporate customers.",
+      ],
+    },
     fields: [
       { zh: "成立时间", en: "Year Established" },
       { zh: "主营业务", en: "Main Business" },
@@ -1221,6 +1235,13 @@ function App() {
                   <h3>{module.title[language]}</h3>
                   <p>{module.summary[language]}</p>
                 </div>
+                {"content" in module && module.content ? (
+                  <div className="template-content">
+                    {module.content[language].map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
+                ) : null}
                 <ul className="template-list">
                   {module.fields.map((field) => (
                     <li key={field.zh}>
