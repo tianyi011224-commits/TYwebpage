@@ -229,6 +229,56 @@ const companyProfileModules = [
   },
 ];
 
+const homeStats = [
+  { value: "2023", label: { zh: "成立于新加坡", en: "Established in Singapore" } },
+  { value: "F&B", label: { zh: "服务餐饮企业", en: "Serving F&B Businesses" } },
+  { value: "Ship", label: { zh: "支持船舶补给", en: "Ship Provision Support" } },
+];
+
+const homeServices = [
+  {
+    icon: Truck,
+    title: { zh: "一站式采购配送", en: "One-stop Procurement" },
+    text: {
+      zh: "围绕餐厅和船舶日常需求，整合蔬果、调味品、干货和厨房用品供应。",
+      en: "Integrated supply of produce, seasonings, dry goods, and kitchen essentials for restaurants and vessels.",
+    },
+  },
+  {
+    icon: PackageCheck,
+    title: { zh: "稳定日常供货", en: "Stable Daily Supply" },
+    text: {
+      zh: "按客户采购习惯和用量安排备货，帮助后厨减少临时采购压力。",
+      en: "Prepare supply according to customer demand patterns to reduce last-minute purchasing pressure.",
+    },
+  },
+  {
+    icon: ClipboardCheck,
+    title: { zh: "灵活询价跟进", en: "Flexible Enquiry Follow-up" },
+    text: {
+      zh: "根据品类、数量、配送时间和特殊需求，提供务实的沟通与确认。",
+      en: "Provide practical confirmation based on product type, quantity, delivery timing, and specific needs.",
+    },
+  },
+];
+
+const homeProductGroups = [
+  { zh: "新鲜水果", en: "Fresh Fruits" },
+  { zh: "蔬菜", en: "Vegetables" },
+  { zh: "调味品", en: "Seasonings" },
+  { zh: "干货", en: "Dry Goods" },
+  { zh: "厨房用品", en: "Kitchen Supplies" },
+  { zh: "船舶食品物资", en: "Ship Food Supplies" },
+];
+
+const homeClientGroups = [
+  { zh: "中国餐厅", en: "Chinese Restaurants" },
+  { zh: "中餐经营者", en: "Chinese F&B Operators" },
+  { zh: "船运公司", en: "Shipping Companies" },
+  { zh: "船舶与船员", en: "Vessels and Crews" },
+  { zh: "企业客户", en: "Corporate Clients" },
+];
+
 const strengths = [
   {
     icon: Globe2,
@@ -275,15 +325,28 @@ const uiCopy = {
     cartOpenTitle: "打开购物车",
     cartOpenLabel: (count: number) => `打开购物车，当前 ${count} 件商品`,
     shop: "在线选购",
-    heroTitle: "天一国际贸易",
+    heroTitle: "新加坡餐饮与船舶食品物资供应服务",
     heroDescription:
-      "面向家庭、办公室、社区客户和企业采购需求，提供精选食品、生鲜与日常消费品供应服务。我们从货源组织、订单确认到配送跟进形成闭环，让采购更可靠、更省心。",
+      "TIAN YI INTERNATIONAL TRADING PTE. LTD（添億公司）为本地餐饮企业、船运公司及企业客户提供蔬果、调味品、干货与厨房用品的一站式采购配送服务。",
     heroPrimary: "了解公司简介",
     heroSecondary: "在线选购",
-    heroImageLabel: "食品供应与贸易服务",
-    heroImageAlt: "摆满蔬菜水果的生鲜货架",
-    heroBadge: "供应整合 · 订单确认 · 配送跟进",
+    heroImageLabel: "餐饮食材与厨房用品供应",
+    heroImageAlt: "餐饮厨房正在准备新鲜食材",
+    heroBadge: "餐饮供应 · 船舶补给 · 及时配送",
     homeOverviewLabel: "网站主要页面",
+    homeIntroEyebrow: "供应定位",
+    homeIntroTitle: "为后厨和船舶后勤提供稳定、省心的日常供应",
+    homeIntroText:
+      "我们关注采购效率、产品稳定性和长期合作关系，以灵活采购渠道和务实服务方式，协助客户降低采购成本并保障日常运营。",
+    homeServicesEyebrow: "核心服务",
+    homeServicesTitle: "从采购沟通到配送交付的实用服务",
+    homeProductsEyebrow: "供应范围",
+    homeProductsTitle: "覆盖餐饮后厨和船舶日常所需品类",
+    homeClientsEyebrow: "合作客户",
+    homeClientsTitle: "面向餐饮、船运及企业客户",
+    homeContactTitle: "需要稳定供应或询价？",
+    homeContactText: "欢迎通过邮箱联系我们，后续可根据你的实际联系方式补充电话、WhatsApp、地址和地图。",
+    homeContactButton: "发送询价邮件",
     shopSummary: "进入商品页面，按分类挑选商品并提交采购订单。",
     templateEyebrow: "公司信息模板",
     pending: "待补充",
@@ -339,15 +402,28 @@ const uiCopy = {
     cartOpenTitle: "Open cart",
     cartOpenLabel: (count: number) => `Open cart, ${count} items selected`,
     shop: "Shop Online",
-    heroTitle: "Tian Yi International Trading",
+    heroTitle: "Food and Kitchen Supply Services for F&B and Vessels in Singapore",
     heroDescription:
-      "We supply selected food products, fresh produce, and daily consumer goods for homes, offices, communities, and business buyers. From sourcing and order confirmation to delivery follow-up, we make procurement more reliable and easier to manage.",
+      "TIAN YI INTERNATIONAL TRADING PTE. LTD supplies fruits, vegetables, seasonings, dry goods, and kitchen essentials for local F&B businesses, shipping companies, and corporate customers.",
     heroPrimary: "View Company Profile",
     heroSecondary: "Shop Online",
-    heroImageLabel: "Food supply and trading services",
-    heroImageAlt: "Fresh produce shelves filled with vegetables and fruits",
-    heroBadge: "Supply · Order Confirmation · Delivery Follow-up",
+    heroImageLabel: "Food ingredients and kitchen supplies",
+    heroImageAlt: "A commercial kitchen preparing fresh ingredients",
+    heroBadge: "F&B Supply · Ship Provision · Timely Delivery",
     homeOverviewLabel: "Main website pages",
+    homeIntroEyebrow: "Positioning",
+    homeIntroTitle: "Stable daily supply for kitchens and vessel logistics",
+    homeIntroText:
+      "We focus on procurement efficiency, stable product supply, and long-term customer relationships, helping customers reduce purchasing costs and maintain smooth daily operations.",
+    homeServicesEyebrow: "Core Services",
+    homeServicesTitle: "Practical support from procurement enquiry to delivery",
+    homeProductsEyebrow: "Supply Range",
+    homeProductsTitle: "Categories for F&B kitchens and vessel daily needs",
+    homeClientsEyebrow: "Clients",
+    homeClientsTitle: "Serving F&B, shipping, and corporate customers",
+    homeContactTitle: "Need stable supply or a quotation?",
+    homeContactText: "Contact us by email. Phone, WhatsApp, address, and map details can be added once available.",
+    homeContactButton: "Send Enquiry Email",
     shopSummary: "Browse products by category, add items to cart, and submit a purchase enquiry.",
     templateEyebrow: "Company Information Template",
     pending: "To be added",
@@ -1186,7 +1262,7 @@ function App() {
           </div>
           <div className="hero-image" aria-label={copy.heroImageLabel}>
             <img
-              src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=80"
+              src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1400&q=80"
               alt={copy.heroImageAlt}
             />
             <div className="hero-badge">
@@ -1198,20 +1274,78 @@ function App() {
       </section>
 
       {isHome && (
-        <section className="home-overview" aria-label={copy.homeOverviewLabel}>
-          {companyProfileModules.map((module) => (
-            <a href={`/${module.slug}`} key={module.slug}>
-              <strong>{module.title[language]}</strong>
-              <span>{module.summary[language]}</span>
+        <>
+          <section className="home-intro" aria-label={copy.homeOverviewLabel}>
+            <div>
+              <p className="eyebrow">{copy.homeIntroEyebrow}</p>
+              <h2>{copy.homeIntroTitle}</h2>
+              <p>{copy.homeIntroText}</p>
+            </div>
+            <div className="home-stat-grid">
+              {homeStats.map((stat) => (
+                <div className="home-stat-card" key={stat.value}>
+                  <strong>{stat.value}</strong>
+                  <span>{stat.label[language]}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="home-section">
+            <div className="section-heading compact">
+              <div>
+                <p className="eyebrow">{copy.homeServicesEyebrow}</p>
+                <h2>{copy.homeServicesTitle}</h2>
+              </div>
+            </div>
+            <div className="home-service-grid">
+              {homeServices.map((service) => {
+                const Icon = service.icon;
+                return (
+                  <article className="home-service-card" key={service.title.zh}>
+                    <span>
+                      <Icon size={23} aria-hidden="true" />
+                    </span>
+                    <h3>{service.title[language]}</h3>
+                    <p>{service.text[language]}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="home-split-section">
+            <div>
+              <p className="eyebrow">{copy.homeProductsEyebrow}</p>
+              <h2>{copy.homeProductsTitle}</h2>
+              <div className="home-tag-list">
+                {homeProductGroups.map((item) => (
+                  <span key={item.zh}>{item[language]}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="eyebrow">{copy.homeClientsEyebrow}</p>
+              <h2>{copy.homeClientsTitle}</h2>
+              <div className="home-tag-list">
+                {homeClientGroups.map((item) => (
+                  <span key={item.zh}>{item[language]}</span>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="home-contact-band">
+            <div>
+              <h2>{copy.homeContactTitle}</h2>
+              <p>{copy.homeContactText}</p>
+            </div>
+            <a className="primary-link" href="mailto:tianyi011224@gmail.com">
+              {copy.homeContactButton}
+              <ChevronRight size={18} aria-hidden="true" />
             </a>
-          ))}
-          {ENABLE_ONLINE_SHOP && (
-            <a href="/shop">
-              <strong>{copy.shop}</strong>
-              <span>{copy.shopSummary}</span>
-            </a>
-          )}
-        </section>
+          </section>
+        </>
       )}
 
       {activeCompanyModule && (
