@@ -108,7 +108,7 @@ type AdminOrderRecord = {
 const CART_STORAGE_KEY = "ty-shop-cart";
 const ADMIN_PASSWORD_STORAGE_KEY = "ty-admin-password";
 const LANGUAGE_STORAGE_KEY = "ty-site-language";
-const ENABLE_ONLINE_SHOP = false;
+const ENABLE_ONLINE_SHOP = true;
 
 type Language = "zh" | "en";
 
@@ -135,8 +135,8 @@ const companyProfileModules = [
     icon: Store,
     title: { zh: "公司简介", en: "Company Profile" },
     summary: {
-      zh: "用于展示公司基础信息，后续可补充正式介绍文字。",
-      en: "Use this section for company background and basic business information.",
+      zh: "新加坡本地餐饮、船舶与企业客户的一站式食品及厨房用品供应伙伴。",
+      en: "A Singapore-based supply partner for F&B, vessel, and corporate food procurement.",
     },
     content: {
       zh: [
@@ -153,9 +153,24 @@ const companyProfileModules = [
       ],
     },
     fields: [
-      { zh: "成立时间", en: "Year Established" },
-      { zh: "主营业务", en: "Main Business" },
-      { zh: "服务城市/区域", en: "Service Cities / Areas" },
+      {
+        zh: "成立时间",
+        en: "Year Established",
+        value: { zh: "2023 年，成立于新加坡", en: "Established in Singapore in 2023" },
+      },
+      {
+        zh: "主营业务",
+        en: "Main Business",
+        value: {
+          zh: "食品、生鲜、调味品、干货、厨房用品及船舶食品物资供应",
+          en: "Food, fresh produce, seasonings, dry goods, kitchen essentials, and ship provisions",
+        },
+      },
+      {
+        zh: "服务城市/区域",
+        en: "Service Cities / Areas",
+        value: { zh: "新加坡本地餐饮、企业与港口相关客户", en: "F&B, corporate, and port-related customers in Singapore" },
+      },
     ],
   },
   {
@@ -163,16 +178,16 @@ const companyProfileModules = [
     icon: PackageCheck,
     title: { zh: "产品范围", en: "Product Range" },
     summary: {
-      zh: "用于说明公司可供应的主要产品类别。",
-      en: "Use this section to describe the main product categories available.",
+      zh: "围绕餐饮后厨、企业补给和船舶日常需求组织多品类供应。",
+      en: "Multi-category supply for F&B kitchens, corporate procurement, and vessel daily needs.",
     },
     fields: [
-      { zh: "水果", en: "Fruits" },
-      { zh: "蔬菜", en: "Vegetables" },
-      { zh: "进口水果", en: "Imported Fruits" },
-      { zh: "本地农产品", en: "Local Produce" },
-      { zh: "有机产品", en: "Organic Products" },
-      { zh: "预切/包装产品", en: "Pre-cut / Packaged Products" },
+      { zh: "水果", en: "Fruits", value: { zh: "日常鲜果、办公室水果、礼盒及组合采购", en: "Daily fruits, office fruit boxes, gift packs, and bundle orders" } },
+      { zh: "蔬菜", en: "Vegetables", value: { zh: "餐饮后厨、家庭配送和小批量稳定补货", en: "Kitchen supply, home delivery, and recurring small-batch replenishment" } },
+      { zh: "调味品与干货", en: "Seasonings and Dry Goods", value: { zh: "中餐门店常用调料、干货及基础食品物资", en: "Common Chinese F&B seasonings, dry goods, and staple supplies" } },
+      { zh: "厨房用品", en: "Kitchen Supplies", value: { zh: "后厨日常消耗品与常用配套物品", en: "Daily kitchen consumables and related essentials" } },
+      { zh: "船舶食品物资", en: "Ship Provisions", value: { zh: "面向停靠新加坡港口船舶的伙食及后勤补给", en: "Food and logistics support for vessels calling at Singapore ports" } },
+      { zh: "组合套餐", en: "Procurement Bundles", value: { zh: "按家庭、办公室、企业福利和社区团购场景组合", en: "Custom bundles for homes, offices, corporate welfare, and group buys" } },
     ],
   },
   {
@@ -180,16 +195,16 @@ const companyProfileModules = [
     icon: Truck,
     title: { zh: "服务优势", en: "Service Advantages" },
     summary: {
-      zh: "用于突出供货、配送、价格与定制服务能力。",
-      en: "Use this section to highlight supply, delivery, pricing, and custom order strengths.",
+      zh: "用稳定供货、人工确认和灵活配送，减少客户日常采购沟通成本。",
+      en: "Stable supply, manual confirmation, and flexible delivery reduce day-to-day procurement friction.",
     },
     fields: [
-      { zh: "稳定供货", en: "Stable Supply" },
-      { zh: "每日配送", en: "Daily Delivery" },
-      { zh: "冷链运输", en: "Cold Chain Transport" },
-      { zh: "品质筛选", en: "Quality Selection" },
-      { zh: "批发价格", en: "Wholesale Pricing" },
-      { zh: "定制订单", en: "Custom Orders" },
+      { zh: "稳定供货", en: "Stable Supply", value: { zh: "按客户常用品类和用量提前组织货源", en: "Source around each customer's recurring categories and volume" } },
+      { zh: "及时配送", en: "Timely Delivery", value: { zh: "根据订单和路线安排交付，降低临时补货压力", en: "Plan delivery around order details and routes to reduce urgent replenishment pressure" } },
+      { zh: "品质筛选", en: "Quality Selection", value: { zh: "关注新鲜度、规格、包装完整度和替换方案", en: "Check freshness, specifications, packaging, and replacement options" } },
+      { zh: "务实报价", en: "Practical Pricing", value: { zh: "结合数量、规格和供货周期提供可执行报价", en: "Quote based on quantity, specification, and supply cadence" } },
+      { zh: "人工跟进", en: "Manual Follow-up", value: { zh: "提交询价后由工作人员确认库存、配送和付款安排", en: "Staff confirm stock, delivery, and payment after an enquiry is submitted" } },
+      { zh: "定制订单", en: "Custom Orders", value: { zh: "支持餐饮、船舶、企业福利和组合套餐需求", en: "Support F&B, vessel, corporate welfare, and bundle requirements" } },
     ],
   },
   {
@@ -197,16 +212,16 @@ const companyProfileModules = [
     icon: UsersRound,
     title: { zh: "合作客户", en: "Clients" },
     summary: {
-      zh: "用于展示适合服务的客户类型。",
-      en: "Use this section to show the customer groups the business serves.",
+      zh: "服务需要长期、稳定、可沟通供应方案的餐饮、船运和企业客户。",
+      en: "Serving F&B, shipping, and corporate customers that need steady, responsive supply.",
     },
     fields: [
-      { zh: "餐厅", en: "Restaurants" },
-      { zh: "酒店", en: "Hotels" },
-      { zh: "超市", en: "Supermarkets" },
-      { zh: "学校", en: "Schools" },
-      { zh: "食堂", en: "Canteens" },
-      { zh: "食品加工厂", en: "Food Processing Factories" },
+      { zh: "餐厅", en: "Restaurants", value: { zh: "中餐厅、轻餐门店与日常后厨采购", en: "Chinese restaurants, light F&B shops, and daily kitchen procurement" } },
+      { zh: "酒店与食堂", en: "Hotels and Canteens", value: { zh: "稳定补给、周期采购和临时加单", en: "Stable replenishment, recurring procurement, and urgent add-ons" } },
+      { zh: "船运公司", en: "Shipping Companies", value: { zh: "船员伙食、港口补给与后勤物资需求", en: "Crew meals, port provisions, and logistics supply needs" } },
+      { zh: "企业客户", en: "Corporate Clients", value: { zh: "办公室水果、员工福利和节日组合采购", en: "Office fruit supply, staff welfare, and seasonal bundle orders" } },
+      { zh: "社区团购", en: "Community Group Buys", value: { zh: "家庭鲜食箱、小批量配送和组合套餐", en: "Family fresh boxes, small-batch delivery, and bundled orders" } },
+      { zh: "食品经营者", en: "Food Operators", value: { zh: "需要多品类、可替换、可确认供应的客户", en: "Operators needing multi-category, substitutable, confirmed supply" } },
     ],
   },
   {
@@ -214,16 +229,16 @@ const companyProfileModules = [
     icon: Globe2,
     title: { zh: "联系方式", en: "Contact" },
     summary: {
-      zh: "用于集中展示客户询价和联系入口。",
-      en: "Use this section for enquiry channels and contact details.",
+      zh: "通过邮箱提交询价、订单需求或合作信息，工作人员会继续确认细节。",
+      en: "Send enquiries, order requirements, or cooperation details by email for staff follow-up.",
     },
     fields: [
-      { zh: "电话", en: "Phone" },
-      { zh: "WhatsApp", en: "WhatsApp" },
-      { zh: "邮箱", en: "Email" },
-      { zh: "地址", en: "Address" },
-      { zh: "地图", en: "Map" },
-      { zh: "询价按钮", en: "Enquiry Button" },
+      { zh: "邮箱", en: "Email", value: { zh: "tianyi011224@gmail.com", en: "tianyi011224@gmail.com" } },
+      { zh: "服务区域", en: "Service Area", value: { zh: "新加坡本地餐饮、企业与港口相关客户", en: "F&B, corporate, and port-related customers in Singapore" } },
+      { zh: "询价内容", en: "Enquiry Details", value: { zh: "品类、数量、规格、配送时间和替换偏好", en: "Categories, quantity, specification, delivery timing, and replacement preferences" } },
+      { zh: "订单跟进", en: "Order Follow-up", value: { zh: "提交后由工作人员确认库存、配送和付款安排", en: "Staff confirm stock, delivery, and payment after submission" } },
+      { zh: "线上选购", en: "Online Shop", value: { zh: "可在商品页加入购物车并提交订单意向", en: "Add products to cart and submit an order enquiry from the shop page" } },
+      { zh: "合作咨询", en: "Cooperation", value: { zh: "适合长期供货、船舶补给和企业采购沟通", en: "For recurring supply, ship provision, and corporate procurement discussions" } },
     ],
     cta: { zh: "立即询价", en: "Send Enquiry" },
   },
@@ -345,11 +360,11 @@ const uiCopy = {
     homeClientsEyebrow: "合作客户",
     homeClientsTitle: "面向餐饮、船运及企业客户",
     homeContactTitle: "需要稳定供应或询价？",
-    homeContactText: "欢迎通过邮箱联系我们，后续可根据你的实际联系方式补充电话、WhatsApp、地址和地图。",
+    homeContactText: "欢迎通过邮箱发送品类、数量、规格和配送时间，我们会继续确认供货、替换方案与付款安排。",
     homeContactButton: "发送询价邮件",
     shopSummary: "进入商品页面，按分类挑选商品并提交采购订单。",
-    templateEyebrow: "公司信息模板",
-    pending: "待补充",
+    templateEyebrow: "公司信息",
+    pending: "请邮件确认",
     productEyebrow: "在线选购",
     productTitle: "精选商品与组合采购",
     categoryLabel: "商品分类",
@@ -386,7 +401,7 @@ const uiCopy = {
     name: "姓名",
     namePlaceholder: "联系人姓名",
     contact: "电话或邮箱",
-    contactPlaceholder: "用于确认订单",
+    contactPlaceholder: "方便工作人员确认订单",
     address: "配送地址",
     addressPlaceholder: "小区、街道或详细地址",
     notes: "备注",
@@ -422,11 +437,11 @@ const uiCopy = {
     homeClientsEyebrow: "Clients",
     homeClientsTitle: "Serving F&B, shipping, and corporate customers",
     homeContactTitle: "Need stable supply or a quotation?",
-    homeContactText: "Contact us by email. Phone, WhatsApp, address, and map details can be added once available.",
+    homeContactText: "Email us with categories, quantity, specifications, and delivery timing. We will confirm supply, replacement options, and payment arrangements.",
     homeContactButton: "Send Enquiry Email",
     shopSummary: "Browse products by category, add items to cart, and submit a purchase enquiry.",
-    templateEyebrow: "Company Information Template",
-    pending: "To be added",
+    templateEyebrow: "Company Information",
+    pending: "Confirm by email",
     productEyebrow: "Shop Online",
     productTitle: "Selected Products and Bundled Procurement",
     categoryLabel: "Product categories",
@@ -1380,7 +1395,7 @@ function App() {
                   {module.fields.map((field) => (
                     <li key={field.zh}>
                       <strong>{field[language]}</strong>
-                      <span>{copy.pending}</span>
+                      <span>{field.value?.[language] ?? copy.pending}</span>
                     </li>
                   ))}
                 </ul>
