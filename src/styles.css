@@ -607,6 +607,7 @@ img {
   margin-top: 10px;
 }
 
+/* 公共页脚：桌面端采用品牌、导航、联系方式三栏布局。 */
 .site-footer {
   background: #030403;
   color: #fff;
@@ -642,6 +643,7 @@ img {
   margin-top: 12px;
 }
 
+/* 二维码组的位置：margin-top 控制与公司名称的垂直距离，gap 控制两个二维码的间距。 */
 .footer-qr-grid {
   display: flex;
   gap: 24px;
@@ -654,6 +656,7 @@ img {
   justify-items: center;
 }
 
+/* 二维码显示框必须保持等宽等高，替换真实图片时可直接修改这两个尺寸。 */
 .footer-qr-placeholder {
   align-items: center;
   background: #fff;
@@ -722,6 +725,7 @@ img {
   overflow-wrap: anywhere;
 }
 
+/* 联系按钮保持足够的触控面积，兼顾手机端可用性。 */
 .footer-contact > a {
   align-items: center;
   background: #00c96f;
@@ -1878,6 +1882,7 @@ img {
     min-height: 260px;
   }
 
+  /* 平板端将联系方式下移到第二行，避免三栏内容被压缩。 */
   .footer-grid {
     gap: 56px;
     grid-template-columns: minmax(280px, 1fr) minmax(220px, 0.8fr);
@@ -1975,6 +1980,7 @@ img {
     padding: 64px 22px 40px;
   }
 
+  /* 手机端改为单栏，导航使用两列以缩短页脚高度。 */
   .footer-grid {
     gap: 48px;
     grid-template-columns: 1fr;

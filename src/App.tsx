@@ -365,6 +365,7 @@ const uiCopy = {
     homeContactTitle: "与 TIAN YI 建立供应合作",
     homeContactText: "如需稳定供货、船舶补给或厨房用品采购报价，欢迎通过邮箱联系我们。",
     homeContactButton: "发送询价邮件",
+    // 页脚联系信息：地址、电话和二维码准备完成后，可在此处统一替换展示文案。
     footerContactTitle: "联系方式",
     footerOfficeTitle: "新加坡办公室",
     footerAddress: "办公地址：待补充",
@@ -454,6 +455,7 @@ const uiCopy = {
     homeContactTitle: "Build a supply partnership with TIAN YI",
     homeContactText: "Contact us for stable supply, ship provision, or kitchen goods procurement quotations.",
     homeContactButton: "Send Enquiry Email",
+    // 英文页脚文案与中文版字段保持一一对应，避免切换语言时出现内容缺失。
     footerContactTitle: "Contact",
     footerOfficeTitle: "Singapore Office",
     footerAddress: "Office address: To be added",
@@ -1525,6 +1527,7 @@ function App() {
         </>
       )}
 
+      {/* 公共页脚：所有公开页面共用，后台管理页面不会渲染此区域。 */}
       <footer className="site-footer">
         <div className="footer-grid">
           <div className="footer-brand-column">
@@ -1535,6 +1538,7 @@ function App() {
               INTERNATIONAL TRADING PTE. LTD
             </span>
             <div className="footer-qr-grid">
+              {/* 当前使用图标作为二维码占位；接入真实图片时在配置项增加 src，并改用 img 渲染。 */}
               {[
                 { label: copy.footerWhatsapp, className: "whatsapp" },
                 { label: copy.footerWechat, className: "wechat" },
@@ -1550,6 +1554,7 @@ function App() {
             <p className="footer-copyright">{copy.footerCopyright}</p>
           </div>
 
+          {/* 页脚仅保留主要访问入口，完整栏目仍可通过顶部导航进入。 */}
           <nav className="footer-nav" aria-label={copy.navLabel}>
             <a href="/">{copy.homeLabel}</a>
             {companyProfileModules
@@ -1565,6 +1570,7 @@ function App() {
               ))}
           </nav>
 
+          {/* 联系按钮使用 mailto，无需额外脚本即可调用访客设备的默认邮件应用。 */}
           <div className="footer-contact">
             <h2>{copy.footerContactTitle}</h2>
             <h3>{copy.footerOfficeTitle}</h3>
