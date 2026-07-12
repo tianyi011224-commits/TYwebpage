@@ -349,18 +349,21 @@ const uiCopy = {
     heroImageAlt: "餐饮厨房正在准备新鲜食材",
     heroBadge: "餐饮供应 · 船舶补给 · 及时配送",
     homeOverviewLabel: "网站主要页面",
-    homeIntroEyebrow: "供应定位",
-    homeIntroTitle: "为后厨和船舶后勤提供稳定、省心的日常供应",
+    homeIntroEyebrow: "ABOUT TIAN YI",
+    homeIntroTitle: "专注新加坡餐饮与船舶食品供应链服务",
     homeIntroText:
-      "我们关注采购效率、产品稳定性和长期合作关系，以灵活采购渠道和务实服务方式，协助客户降低采购成本并保障日常运营。",
-    homeServicesEyebrow: "核心服务",
-    homeServicesTitle: "从采购沟通到配送交付的实用服务",
-    homeProductsEyebrow: "供应范围",
+      "添億公司以食品及厨房用品供应为核心，连接本地餐饮客户、船运公司和可靠采购渠道，提供从询价、备货到配送交付的一站式支持。",
+    homeVideoEyebrow: "BRAND VIDEO",
+    homeVideoTitle: "视频展示位置",
+    homeVideoText: "这里预留企业介绍视频或仓储配送视频位置，后续可替换为真实视频文件或 YouTube/Vimeo 链接。",
+    homeServicesEyebrow: "SOLUTIONS",
+    homeServicesTitle: "一站式食品及厨房用品供应方案",
+    homeProductsEyebrow: "CATEGORY",
     homeProductsTitle: "覆盖餐饮后厨和船舶日常所需品类",
-    homeClientsEyebrow: "合作客户",
-    homeClientsTitle: "面向餐饮、船运及企业客户",
-    homeContactTitle: "需要稳定供应或询价？",
-    homeContactText: "欢迎通过邮箱发送品类、数量、规格和配送时间，我们会继续确认供货、替换方案与付款安排。",
+    homeClientsEyebrow: "NETWORK",
+    homeClientsTitle: "服务新加坡本地餐饮与船舶客户",
+    homeContactTitle: "与 TIAN YI 建立供应合作",
+    homeContactText: "如需稳定供货、船舶补给或厨房用品采购报价，欢迎通过邮箱联系我们。",
     homeContactButton: "发送询价邮件",
     shopSummary: "进入商品页面，按分类挑选商品并提交采购订单。",
     templateEyebrow: "公司信息",
@@ -426,18 +429,21 @@ const uiCopy = {
     heroImageAlt: "A commercial kitchen preparing fresh ingredients",
     heroBadge: "F&B Supply · Ship Provision · Timely Delivery",
     homeOverviewLabel: "Main website pages",
-    homeIntroEyebrow: "Positioning",
-    homeIntroTitle: "Stable daily supply for kitchens and vessel logistics",
+    homeIntroEyebrow: "ABOUT TIAN YI",
+    homeIntroTitle: "Food supply chain services for F&B and vessels in Singapore",
     homeIntroText:
-      "We focus on procurement efficiency, stable product supply, and long-term customer relationships, helping customers reduce purchasing costs and maintain smooth daily operations.",
-    homeServicesEyebrow: "Core Services",
-    homeServicesTitle: "Practical support from procurement enquiry to delivery",
-    homeProductsEyebrow: "Supply Range",
+      "TIAN YI focuses on food and kitchen supply services, connecting local F&B customers, shipping companies, and practical procurement channels with one-stop support from enquiry and preparation to delivery.",
+    homeVideoEyebrow: "BRAND VIDEO",
+    homeVideoTitle: "Video Placeholder",
+    homeVideoText: "This space is reserved for a company introduction, warehouse, or delivery video. It can later be replaced with a real video file or an embedded YouTube/Vimeo link.",
+    homeServicesEyebrow: "SOLUTIONS",
+    homeServicesTitle: "One-stop food and kitchen supply solutions",
+    homeProductsEyebrow: "CATEGORY",
     homeProductsTitle: "Categories for F&B kitchens and vessel daily needs",
-    homeClientsEyebrow: "Clients",
-    homeClientsTitle: "Serving F&B, shipping, and corporate customers",
-    homeContactTitle: "Need stable supply or a quotation?",
-    homeContactText: "Email us with categories, quantity, specifications, and delivery timing. We will confirm supply, replacement options, and payment arrangements.",
+    homeClientsEyebrow: "NETWORK",
+    homeClientsTitle: "Serving local F&B and vessel customers in Singapore",
+    homeContactTitle: "Build a supply partnership with TIAN YI",
+    homeContactText: "Contact us for stable supply, ship provision, or kitchen goods procurement quotations.",
     homeContactButton: "Send Enquiry Email",
     shopSummary: "Browse products by category, add items to cart, and submit a purchase enquiry.",
     templateEyebrow: "Company Information",
@@ -1303,6 +1309,19 @@ function App() {
                   <span>{stat.label[language]}</span>
                 </div>
               ))}
+            </div>
+          </section>
+
+          <section className="home-video-section">
+            <div>
+              <p className="eyebrow">{copy.homeVideoEyebrow}</p>
+              <h2>{copy.homeVideoTitle}</h2>
+              <p>{copy.homeVideoText}</p>
+            </div>
+            <div className="video-placeholder" aria-label={copy.homeVideoTitle}>
+              <span>
+                <ChevronRight size={34} aria-hidden="true" />
+              </span>
             </div>
           </section>
 
