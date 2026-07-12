@@ -607,6 +607,137 @@ img {
   margin-top: 10px;
 }
 
+.site-footer {
+  background: #030403;
+  color: #fff;
+  padding: clamp(74px, 9vw, 130px) clamp(24px, 6vw, 100px) 58px;
+}
+
+.footer-grid {
+  display: grid;
+  gap: clamp(56px, 8vw, 120px);
+  grid-template-columns: minmax(300px, 1.1fr) minmax(190px, 0.65fr) minmax(330px, 1fr);
+  margin: 0 auto;
+  max-width: 1450px;
+}
+
+.footer-brand-column {
+  min-width: 0;
+}
+
+.footer-wordmark {
+  color: #fff;
+  display: block;
+  font-size: clamp(2.8rem, 4.5vw, 4.6rem);
+  font-weight: 950;
+  line-height: 0.95;
+  text-decoration: none;
+}
+
+.footer-company-name {
+  color: rgba(255, 255, 255, 0.66);
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-top: 12px;
+}
+
+.footer-qr-grid {
+  display: flex;
+  gap: 24px;
+  margin-top: 50px;
+}
+
+.footer-qr-item {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+.footer-qr-placeholder {
+  align-items: center;
+  background: #fff;
+  color: #050505;
+  display: inline-flex;
+  height: 104px;
+  justify-content: center;
+  width: 104px;
+}
+
+.footer-qr-placeholder.wechat {
+  color: #00c86f;
+}
+
+.footer-qr-item small {
+  color: #00cf78;
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  white-space: pre-line;
+}
+
+.footer-copyright {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.83rem;
+  line-height: 1.7;
+  margin: 46px 0 0;
+}
+
+.footer-nav {
+  align-content: start;
+  display: grid;
+  gap: 8px;
+}
+
+.footer-nav a {
+  color: #fff;
+  font-size: clamp(1.35rem, 2.1vw, 2rem);
+  font-weight: 900;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.footer-nav a:hover {
+  color: #00cf78;
+}
+
+.footer-contact h2 {
+  color: #00cf78;
+  font-size: 1.45rem;
+  margin: 0 0 22px;
+}
+
+.footer-contact h3 {
+  color: #fff;
+  font-size: 1rem;
+  margin: 0 0 16px;
+}
+
+.footer-contact p {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+
+.footer-contact > a {
+  align-items: center;
+  background: #00c96f;
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 1.05rem;
+  font-weight: 900;
+  justify-content: center;
+  margin-top: 28px;
+  min-height: 58px;
+  min-width: 190px;
+  padding: 0 28px;
+  text-decoration: none;
+}
+
 .home-video-section {
   align-items: stretch;
   display: grid;
@@ -1747,6 +1878,17 @@ img {
     min-height: 260px;
   }
 
+  .footer-grid {
+    gap: 56px;
+    grid-template-columns: minmax(280px, 1fr) minmax(220px, 0.8fr);
+  }
+
+  .footer-contact {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    grid-column: 1 / -1;
+    padding-top: 44px;
+  }
+
   .admin-layout,
   .admin-stats {
     grid-template-columns: 1fr;
@@ -1827,6 +1969,32 @@ img {
 
   .hero-inner {
     padding: 180px 18px 54px;
+  }
+
+  .site-footer {
+    padding: 64px 22px 40px;
+  }
+
+  .footer-grid {
+    gap: 48px;
+    grid-template-columns: 1fr;
+  }
+
+  .footer-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footer-nav a {
+    font-size: 1.3rem;
+  }
+
+  .footer-contact {
+    grid-column: auto;
+    padding-top: 38px;
+  }
+
+  .footer-qr-grid {
+    margin-top: 36px;
   }
 
   .stats-grid,

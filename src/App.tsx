@@ -14,6 +14,7 @@ import {
   Minus,
   PackageCheck,
   Plus,
+  QrCode,
   RefreshCw,
   Search,
   ShieldCheck,
@@ -364,6 +365,15 @@ const uiCopy = {
     homeContactTitle: "与 TIAN YI 建立供应合作",
     homeContactText: "如需稳定供货、船舶补给或厨房用品采购报价，欢迎通过邮箱联系我们。",
     homeContactButton: "发送询价邮件",
+    footerContactTitle: "联系方式",
+    footerOfficeTitle: "新加坡办公室",
+    footerAddress: "办公地址：待补充",
+    footerPhone: "电话：待补充",
+    footerBusinessEmail: "业务咨询：tianyi011224@gmail.com",
+    footerWhatsapp: "WhatsApp\n二维码",
+    footerWechat: "微信\n二维码",
+    footerContactButton: "联系我们",
+    footerCopyright: "版权所有©2026 TIAN YI INTERNATIONAL TRADING PTE. LTD 保留所有权利",
     shopSummary: "进入商品页面，按分类挑选商品并提交采购订单。",
     templateEyebrow: "公司信息",
     pending: "请邮件确认",
@@ -444,6 +454,15 @@ const uiCopy = {
     homeContactTitle: "Build a supply partnership with TIAN YI",
     homeContactText: "Contact us for stable supply, ship provision, or kitchen goods procurement quotations.",
     homeContactButton: "Send Enquiry Email",
+    footerContactTitle: "Contact",
+    footerOfficeTitle: "Singapore Office",
+    footerAddress: "Office address: To be added",
+    footerPhone: "Phone: To be added",
+    footerBusinessEmail: "Business enquiry: tianyi011224@gmail.com",
+    footerWhatsapp: "WhatsApp\nQR Code",
+    footerWechat: "WeChat\nQR Code",
+    footerContactButton: "Contact Us",
+    footerCopyright: "Copyright © 2026 TIAN YI INTERNATIONAL TRADING PTE. LTD. All rights reserved.",
     shopSummary: "Browse products by category, add items to cart, and submit a purchase enquiry.",
     templateEyebrow: "Company Information",
     pending: "Confirm by email",
@@ -1505,6 +1524,59 @@ function App() {
       </section>
         </>
       )}
+
+      <footer className="site-footer">
+        <div className="footer-grid">
+          <div className="footer-brand-column">
+            <a className="footer-wordmark" href="/" aria-label="TIAN YI">
+              TIAN YI
+            </a>
+            <span className="footer-company-name">
+              INTERNATIONAL TRADING PTE. LTD
+            </span>
+            <div className="footer-qr-grid">
+              {[
+                { label: copy.footerWhatsapp, className: "whatsapp" },
+                { label: copy.footerWechat, className: "wechat" },
+              ].map((item) => (
+                <div className="footer-qr-item" key={item.className}>
+                  <span className={`footer-qr-placeholder ${item.className}`}>
+                    <QrCode size={76} strokeWidth={1.7} aria-hidden="true" />
+                  </span>
+                  <small>{item.label}</small>
+                </div>
+              ))}
+            </div>
+            <p className="footer-copyright">{copy.footerCopyright}</p>
+          </div>
+
+          <nav className="footer-nav" aria-label={copy.navLabel}>
+            <a href="/">{copy.homeLabel}</a>
+            {companyProfileModules
+              .filter((module) =>
+                ["company", "product-range", "advantages", "contact"].includes(
+                  module.slug,
+                ),
+              )
+              .map((module) => (
+                <a href={`/${module.slug}`} key={module.slug}>
+                  {module.title[language]}
+                </a>
+              ))}
+          </nav>
+
+          <div className="footer-contact">
+            <h2>{copy.footerContactTitle}</h2>
+            <h3>{copy.footerOfficeTitle}</h3>
+            <p>{copy.footerAddress}</p>
+            <p>{copy.footerPhone}</p>
+            <p>{copy.footerBusinessEmail}</p>
+            <a href="mailto:tianyi011224@gmail.com">
+              {copy.footerContactButton}
+            </a>
+          </div>
+        </div>
+      </footer>
 
       {ENABLE_ONLINE_SHOP && (
       <aside className={`cart-panel ${isCartOpen ? "open" : ""}`}>
