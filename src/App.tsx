@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
-  BadgeCheck,
   BarChart3,
   CheckCircle2,
   ChevronLeft,
@@ -1186,7 +1185,7 @@ function App() {
 
   return (
     <main>
-      <section className="top-band">
+      <section className={`top-band ${isHome ? "home-band" : "inner-band"}`}>
         <header className="site-header">
           <a
             className="brand"
@@ -1202,6 +1201,9 @@ function App() {
             </span>
           </a>
           <nav className="site-nav" aria-label={copy.navLabel}>
+            <a className={isHome ? "active" : ""} href="/">
+              {copy.homeLabel}
+            </a>
             {companyProfileModules.map((module) => (
               <a
                 className={page === module.slug ? "active" : ""}
@@ -1262,36 +1264,37 @@ function App() {
           )}
         </header>
 
-        <div className="hero">
-          <div className="hero-copy">
+        {isHome ? (
+          <div className="hero hero-home">
+            <div
+              className="hero-media-placeholder"
+              role="img"
+              aria-label={copy.homeVideoTitle}
+            >
+              <span>{copy.homeVideoTitle}</span>
+            </div>
+            <div className="hero-overlay">
+              <div className="hero-copy">
+                <p className="hero-wordmark">TIAN YI</p>
+                <h1>{copy.heroTitle}</h1>
+              </div>
+              <div className="hero-proof-grid" aria-label={copy.homeOverviewLabel}>
+                {homeStats.map((stat) => (
+                  <div className="hero-proof-card" key={stat.value}>
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label[language]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="hero hero-inner">
             <p className="eyebrow">TIAN YI INTERNATIONAL TRADING PTE. LTD</p>
-            <h1>{copy.heroTitle}</h1>
-            <p>
-              {copy.heroDescription}
-            </p>
-            <div className="hero-actions">
-              <a className="primary-link" href="/company">
-                {copy.heroPrimary}
-                <ChevronRight size={18} aria-hidden="true" />
-              </a>
-              {ENABLE_ONLINE_SHOP && (
-                <a className="secondary-link" href="/shop">
-                  {copy.heroSecondary}
-                </a>
-              )}
-            </div>
+            <h1>{activeCompanyModule?.title[language] ?? copy.heroTitle}</h1>
+            <p>{activeCompanyModule?.summary[language] ?? copy.heroDescription}</p>
           </div>
-          <div className="hero-image" aria-label={copy.heroImageLabel}>
-            <img
-              src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1400&q=80"
-              alt={copy.heroImageAlt}
-            />
-            <div className="hero-badge">
-              <BadgeCheck size={19} aria-hidden="true" />
-              <span>{copy.heroBadge}</span>
-            </div>
-          </div>
-        </div>
+        )}
       </section>
 
       {isHome && (
@@ -1302,13 +1305,8 @@ function App() {
               <h2>{copy.homeIntroTitle}</h2>
               <p>{copy.homeIntroText}</p>
             </div>
-            <div className="home-stat-grid">
-              {homeStats.map((stat) => (
-                <div className="home-stat-card" key={stat.value}>
-                  <strong>{stat.value}</strong>
-                  <span>{stat.label[language]}</span>
-                </div>
-              ))}
+            <div className="home-intro-placeholder" aria-hidden="true">
+              <span>TIAN YI</span>
             </div>
           </section>
 
