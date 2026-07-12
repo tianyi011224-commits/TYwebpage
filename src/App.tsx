@@ -108,7 +108,7 @@ type AdminOrderRecord = {
 const CART_STORAGE_KEY = "ty-shop-cart";
 const ADMIN_PASSWORD_STORAGE_KEY = "ty-admin-password";
 const LANGUAGE_STORAGE_KEY = "ty-site-language";
-const ENABLE_ONLINE_SHOP = true;
+const ENABLE_ONLINE_SHOP = false;
 
 type Language = "zh" | "en";
 
