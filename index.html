@@ -27,6 +27,31 @@
       <textarea name="invoiceSpreadsheetBase64"></textarea>
       <input name="emailStatus" />
     </form>
+    <!-- Netlify 在构建阶段读取静态表单，用于识别 React 页面中的合作申请字段。 -->
+    <form name="customer-partnership" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="customer-partnership" />
+      <input type="hidden" name="applicationType" value="customer" />
+      <input name="bot-field" />
+      <input name="companyName" />
+      <select name="companyType"><option value=""></option></select>
+      <input name="address" />
+      <input name="contactName" />
+      <input name="phone" />
+      <input name="monthlyPurchase" />
+      <input name="email" />
+    </form>
+    <form name="supplier-partnership" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="supplier-partnership" />
+      <input type="hidden" name="applicationType" value="supplier" />
+      <input name="bot-field" />
+      <input name="companyName" />
+      <select name="supplierCategory"><option value=""></option></select>
+      <input name="address" />
+      <input name="contactName" />
+      <input name="phone" />
+      <input name="supplyRegion" />
+      <input name="email" />
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

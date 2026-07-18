@@ -8,6 +8,7 @@ vite.config.d.ts
 .env.*
 *.local
 shop-desktop-check.png
+runtime_state/
 
 # Local Netlify folder
 .netlify

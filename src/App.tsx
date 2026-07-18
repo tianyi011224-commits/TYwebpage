@@ -9,6 +9,7 @@ import {
   FileSpreadsheet,
   FileText,
   Globe2,
+  Handshake,
   Leaf,
   Lock,
   Minus,
@@ -129,6 +130,249 @@ const companyStats = [
   { value: "可追踪", label: "订单确认与交付反馈" },
 ];
 
+const companyPurposeCards = [
+  {
+    title: { zh: "使命", en: "Mission" },
+    body: {
+      zh: "以稳定品质、及时配送和用心服务，为新加坡餐饮、船舶及企业客户提供高效的一站式食品与厨房用品供应。",
+      en: "To provide Singapore's F&B, vessel, and corporate customers with reliable one-stop food and kitchen supply through consistent quality, timely delivery, and attentive service.",
+    },
+  },
+  {
+    title: { zh: "愿景", en: "Vision" },
+    body: {
+      zh: "成为新加坡值得长期信赖的食品及后勤物资供应伙伴，以专业供应链连接并响应客户的每一次需求。",
+      en: "To become Singapore's trusted long-term partner for food and logistics supplies, supported by a professional and responsive supply chain.",
+    },
+  },
+  {
+    title: { zh: "价值观", en: "Values" },
+    items: [
+      { zh: "品质稳定", en: "Consistent quality" },
+      { zh: "及时负责", en: "Timely and accountable" },
+      { zh: "客户为先", en: "Customer first" },
+      { zh: "诚信共赢", en: "Integrity and shared success" },
+    ],
+  },
+];
+
+const companySourceHighlights = [
+  {
+    origin: { zh: "中国 · 山东", en: "Shandong, China" },
+    products: { zh: "胡萝卜、洋葱、土豆", en: "Carrots, Onions & Potatoes" },
+    benefit: {
+      zh: "规模化种植与分级供应，规格稳定、耐储存，适合餐饮后厨批量备货。",
+      en: "Scaled cultivation and graded supply provide consistent sizing and good storage performance for bulk kitchen use.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=900&q=84",
+  },
+  {
+    origin: { zh: "中国 · 云南", en: "Yunnan, China" },
+    products: { zh: "高原叶菜、菌菇、西兰花", en: "Leafy Greens, Mushrooms & Broccoli" },
+    benefit: {
+      zh: "高原气候与昼夜温差有利于蔬菜生长，叶色清新、口感爽脆、品类丰富。",
+      en: "Highland conditions and day-night temperature changes support crisp texture, fresh colour, and broad variety.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=900&q=84",
+  },
+  {
+    origin: { zh: "马来西亚 · 金马仑高原", en: "Cameron Highlands, Malaysia" },
+    products: { zh: "生菜、番茄、彩椒", en: "Lettuce, Tomatoes & Capsicum" },
+    benefit: {
+      zh: "高地环境适合多种温凉蔬菜，距离新加坡较近，有利于缩短运输与补货时间。",
+      en: "The cool highland climate supports varied produce, while proximity to Singapore helps shorten replenishment time.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=900&q=84",
+  },
+  {
+    origin: { zh: "中国 · 广西与海南", en: "Guangxi & Hainan, China" },
+    products: { zh: "柑橘、芒果、菠萝", en: "Citrus, Mangoes & Pineapples" },
+    benefit: {
+      zh: "日照充足、热量条件良好，热带与亚热带水果果香明显、汁水充足。",
+      en: "Abundant sunshine and warm growing conditions support aromatic tropical fruit with generous juiciness.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=900&q=84",
+  },
+  {
+    origin: { zh: "泰国", en: "Thailand" },
+    products: { zh: "香蕉、椰青、龙眼", en: "Bananas, Young Coconuts & Longan" },
+    benefit: {
+      zh: "热带水果供应经验成熟，风味浓郁，可按成熟度和使用时间安排采购。",
+      en: "Established tropical fruit supply supports rich flavour and sourcing based on ripeness and intended use.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=84",
+  },
+  {
+    origin: { zh: "新西兰", en: "New Zealand" },
+    products: { zh: "苹果、奇异果", en: "Apples & Kiwifruit" },
+    benefit: {
+      zh: "温带气候与成熟的分级体系，使果品口感清脆、规格清晰，适合零售与团体采购。",
+      en: "A temperate climate and mature grading system support crisp fruit and clear specifications for retail and group orders.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=84",
+  },
+  {
+    origin: { zh: "澳大利亚", en: "Australia" },
+    products: { zh: "牛肉、羊肉", en: "Beef & Lamb" },
+    benefit: {
+      zh: "供应链标准成熟，产品分级与规格选择丰富，便于餐厅按菜单和成本要求采购。",
+      en: "Mature supply standards and varied grades make it easier for restaurants to buy against menu and cost requirements.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=900&q=84",
+  },
+  {
+    origin: { zh: "巴西", en: "Brazil" },
+    products: { zh: "鸡肉、牛肉", en: "Chicken & Beef" },
+    benefit: {
+      zh: "出口加工体系完善，产品规格标准化，适合餐饮、食堂和船舶的大批量供应需求。",
+      en: "Established export processing and standardised specifications support volume requirements for F&B, canteens, and vessels.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=900&q=84",
+  },
+];
+
+const productRangeCatalog = [
+  {
+    name: { zh: "番茄", en: "Tomatoes" },
+    image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "黄瓜", en: "Cucumbers" },
+    image: "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "洋葱与土豆", en: "Onions & Potatoes" },
+    image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "胡萝卜", en: "Carrots" },
+    image: "https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "西兰花", en: "Broccoli" },
+    image: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "生菜与叶菜", en: "Lettuce & Leafy Greens" },
+    image: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "苹果与梨", en: "Apples & Pears" },
+    image: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "柑橘类", en: "Citrus Fruits" },
+    image: "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "香蕉", en: "Bananas" },
+    image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "草莓与莓果", en: "Strawberries & Berries" },
+    image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "热带水果", en: "Tropical Fruits" },
+    image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "牛油果", en: "Avocados" },
+    image: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "牛肉与羊肉", en: "Beef & Lamb" },
+    image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "鸡肉", en: "Poultry" },
+    image: "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "鱼类与海鲜", en: "Fish & Seafood" },
+    image: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "鸡蛋与乳品", en: "Eggs & Dairy" },
+    image: "https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "调味品与香料", en: "Seasonings & Spices" },
+    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "大米与干货", en: "Rice & Dry Goods" },
+    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "厨房用品", en: "Kitchen Supplies" },
+    image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=600&q=82",
+  },
+  {
+    name: { zh: "船舶食品物资", en: "Ship Provisions" },
+    image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=82",
+  },
+];
+
+const supplyChainServices = [
+  {
+    title: { zh: "多渠道采购", en: "Multi-channel Procurement" },
+    text: {
+      zh: "结合本地批发市场、进口商及稳定供应渠道，根据客户品类、数量、预算和使用周期组织货源。",
+      en: "We coordinate local wholesale, importer, and established supply channels around category, volume, budget, and usage cycle.",
+    },
+    image: "https://images.pexels.com/photos/11678438/pexels-photo-11678438.jpeg?auto=compress&cs=tinysrgb&w=1100",
+  },
+  {
+    title: { zh: "品质筛选", en: "Quality Selection" },
+    text: {
+      zh: "按新鲜度、规格、外观和包装完整度进行人工确认，发现异常时及时沟通替换方案。",
+      en: "Freshness, specifications, appearance, and packaging are manually checked, with alternatives discussed when issues arise.",
+    },
+    image: "https://images.pexels.com/photos/5964489/pexels-photo-5964489.jpeg?auto=compress&cs=tinysrgb&w=1100",
+  },
+  {
+    title: { zh: "仓储分拣", en: "Sorting & Order Separation" },
+    text: {
+      zh: "按照客户、订单和配送路线分类整理货物，核对数量与包装要求，减少配货错漏。",
+      en: "Goods are separated by customer, order, and route, with quantities and packing requirements checked before dispatch.",
+    },
+    image: "https://images.pexels.com/photos/4483862/pexels-photo-4483862.jpeg?auto=compress&cs=tinysrgb&w=1100",
+  },
+  {
+    title: { zh: "定制配货", en: "Custom Order Packing" },
+    text: {
+      zh: "可根据菜单、船员人数、预算或固定采购清单，组合蔬果、肉类、干货、调味品及厨房用品。",
+      en: "Produce, meat, dry goods, seasonings, and kitchen supplies can be combined around menus, crew size, budgets, or recurring lists.",
+    },
+    image: "https://images.pexels.com/photos/4451870/pexels-photo-4451870.jpeg?auto=compress&cs=tinysrgb&w=1100",
+  },
+  {
+    title: { zh: "新加坡配送", en: "Singapore Delivery" },
+    text: {
+      zh: "结合收货时间、订单体量和配送路线安排交付，服务餐厅、企业及港口相关客户。",
+      en: "Delivery is arranged around receiving time, order volume, and route for restaurants, businesses, and port-related customers.",
+    },
+    image: "https://images.pexels.com/photos/29786116/pexels-photo-29786116.jpeg?auto=compress&cs=tinysrgb&w=1100",
+  },
+  {
+    title: { zh: "订单跟进", en: "Order Follow-up" },
+    text: {
+      zh: "由工作人员确认库存、替代品、配送和付款安排，并持续记录客户反馈与后续采购需求。",
+      en: "Staff confirm stock, substitutions, delivery, and payment arrangements while recording feedback and recurring requirements.",
+    },
+    image: "https://images.pexels.com/photos/7682337/pexels-photo-7682337.jpeg?auto=compress&cs=tinysrgb&w=1100",
+  },
+];
+
 const companyProfileModules = [
   {
     slug: "company",
@@ -191,56 +435,22 @@ const companyProfileModules = [
     ],
   },
   {
-    slug: "advantages",
-    icon: Truck,
-    title: { zh: "服务优势", en: "Service Advantages" },
-    summary: {
-      zh: "用稳定供货、人工确认和灵活配送，减少客户日常采购沟通成本。",
-      en: "Stable supply, manual confirmation, and flexible delivery reduce day-to-day procurement friction.",
-    },
-    fields: [
-      { zh: "稳定供货", en: "Stable Supply", value: { zh: "按客户常用品类和用量提前组织货源", en: "Source around each customer's recurring categories and volume" } },
-      { zh: "及时配送", en: "Timely Delivery", value: { zh: "根据订单和路线安排交付，降低临时补货压力", en: "Plan delivery around order details and routes to reduce urgent replenishment pressure" } },
-      { zh: "品质筛选", en: "Quality Selection", value: { zh: "关注新鲜度、规格、包装完整度和替换方案", en: "Check freshness, specifications, packaging, and replacement options" } },
-      { zh: "务实报价", en: "Practical Pricing", value: { zh: "结合数量、规格和供货周期提供可执行报价", en: "Quote based on quantity, specification, and supply cadence" } },
-      { zh: "人工跟进", en: "Manual Follow-up", value: { zh: "提交询价后由工作人员确认库存、配送和付款安排", en: "Staff confirm stock, delivery, and payment after an enquiry is submitted" } },
-      { zh: "定制订单", en: "Custom Orders", value: { zh: "支持餐饮、船舶、企业福利和组合套餐需求", en: "Support F&B, vessel, corporate welfare, and bundle requirements" } },
-    ],
-  },
-  {
-    slug: "clients",
+    slug: "join-us",
     icon: UsersRound,
-    title: { zh: "合作客户", en: "Clients" },
+    title: { zh: "加入我们", en: "Join Us" },
     summary: {
-      zh: "服务需要长期、稳定、可沟通供应方案的餐饮、船运和企业客户。",
-      en: "Serving F&B, shipping, and corporate customers that need steady, responsive supply.",
+      zh: "欢迎重视食品品质、客户服务与团队协作的伙伴加入 TIAN YI。",
+      en: "We welcome people who value food quality, customer service, and teamwork to join TIAN YI.",
     },
     fields: [
-      { zh: "餐厅", en: "Restaurants", value: { zh: "中餐厅、轻餐门店与日常后厨采购", en: "Chinese restaurants, light F&B shops, and daily kitchen procurement" } },
-      { zh: "酒店与食堂", en: "Hotels and Canteens", value: { zh: "稳定补给、周期采购和临时加单", en: "Stable replenishment, recurring procurement, and urgent add-ons" } },
-      { zh: "船运公司", en: "Shipping Companies", value: { zh: "船员伙食、港口补给与后勤物资需求", en: "Crew meals, port provisions, and logistics supply needs" } },
-      { zh: "企业客户", en: "Corporate Clients", value: { zh: "办公室水果、员工福利和节日组合采购", en: "Office fruit supply, staff welfare, and seasonal bundle orders" } },
-      { zh: "社区团购", en: "Community Group Buys", value: { zh: "家庭鲜食箱、小批量配送和组合套餐", en: "Family fresh boxes, small-batch delivery, and bundled orders" } },
-      { zh: "食品经营者", en: "Food Operators", value: { zh: "需要多品类、可替换、可确认供应的客户", en: "Operators needing multi-category, substitutable, confirmed supply" } },
+      { zh: "招聘方向", en: "Opportunities", value: { zh: "采购与供应协调、仓储配货、配送及客户服务", en: "Procurement coordination, warehouse packing, delivery, and customer service" } },
+      { zh: "工作地点", en: "Work Location", value: { zh: "新加坡", en: "Singapore" } },
+      { zh: "希望特质", en: "What We Value", value: { zh: "责任心、可靠守时、团队沟通及服务意识", en: "Responsibility, reliability, teamwork, and a service mindset" } },
+      { zh: "相关经验", en: "Relevant Experience", value: { zh: "食品供应、餐饮、仓储或物流经验者优先", en: "Experience in food supply, F&B, warehousing, or logistics is preferred" } },
+      { zh: "应聘资料", en: "Application Details", value: { zh: "姓名、联系方式、应聘方向及个人简历", en: "Name, contact details, preferred role, and resume" } },
+      { zh: "投递邮箱", en: "Application Email", value: { zh: "tianyi011224@gmail.com（具体岗位以实际招聘需求为准）", en: "tianyi011224@gmail.com (roles are subject to current hiring needs)" } },
     ],
-  },
-  {
-    slug: "contact",
-    icon: Globe2,
-    title: { zh: "联系方式", en: "Contact" },
-    summary: {
-      zh: "通过邮箱提交询价、订单需求或合作信息，工作人员会继续确认细节。",
-      en: "Send enquiries, order requirements, or cooperation details by email for staff follow-up.",
-    },
-    fields: [
-      { zh: "邮箱", en: "Email", value: { zh: "tianyi011224@gmail.com", en: "tianyi011224@gmail.com" } },
-      { zh: "服务区域", en: "Service Area", value: { zh: "新加坡本地餐饮、企业与港口相关客户", en: "F&B, corporate, and port-related customers in Singapore" } },
-      { zh: "询价内容", en: "Enquiry Details", value: { zh: "品类、数量、规格、配送时间和替换偏好", en: "Categories, quantity, specification, delivery timing, and replacement preferences" } },
-      { zh: "订单跟进", en: "Order Follow-up", value: { zh: "提交后由工作人员确认库存、配送和付款安排", en: "Staff confirm stock, delivery, and payment after submission" } },
-      { zh: "线上选购", en: "Online Shop", value: { zh: "可在商品页加入购物车并提交订单意向", en: "Add products to cart and submit an order enquiry from the shop page" } },
-      { zh: "合作咨询", en: "Cooperation", value: { zh: "适合长期供货、船舶补给和企业采购沟通", en: "For recurring supply, ship provision, and corporate procurement discussions" } },
-    ],
-    cta: { zh: "立即询价", en: "Send Enquiry" },
+    cta: { zh: "发送应聘邮件", en: "Email Your Application" },
   },
 ];
 
@@ -249,6 +459,126 @@ const homeStats = [
   { value: "F&B", label: { zh: "服务餐饮企业", en: "Serving F&B Businesses" } },
   { value: "Ship", label: { zh: "支持船舶补给", en: "Ship Provision Support" } },
 ];
+
+const homeCompanyHighlights = [
+  {
+    value: { zh: "2023", en: "2023" },
+    label: { zh: "成立年份", en: "Year Established" },
+    image:
+      "https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=1000&q=82",
+  },
+  {
+    value: { zh: "新加坡", en: "Singapore" },
+    label: { zh: "本地服务区域", en: "Local Service Area" },
+    image:
+      "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=1000&q=82",
+  },
+  {
+    value: { zh: "餐饮", en: "F&B" },
+    label: { zh: "餐厅及后厨供应", en: "Restaurant Supply" },
+    image:
+      "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=1000&q=82",
+  },
+  {
+    value: { zh: "船舶", en: "Vessels" },
+    label: { zh: "食品物资补给", en: "Food Provision" },
+    image:
+      "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=1000&q=82",
+  },
+  {
+    value: { zh: "一站式", en: "One-stop" },
+    label: { zh: "采购与配送支持", en: "Procurement & Delivery" },
+    image:
+      "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1000&q=82",
+  },
+  {
+    value: { zh: "新鲜", en: "Fresh" },
+    label: { zh: "品质筛选与供货", en: "Quality-focused Supply" },
+    image:
+      "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=1000&q=82",
+  },
+];
+
+const homeBusinessScopes = [
+  {
+    tab: { zh: "餐饮企业", en: "F&B Businesses" },
+    title: { zh: "餐厅及后厨供应：稳定支持日常经营", en: "Restaurant supply for reliable daily operations" },
+    text: {
+      zh: "围绕中餐厅、餐饮门店及中央厨房的日常需求，提供新鲜蔬果、调味品、干货和常用厨房物品的一站式采购与配送支持。",
+      en: "One-stop procurement and delivery of fresh produce, seasonings, dry goods, and kitchen essentials for restaurants, F&B outlets, and central kitchens.",
+    },
+    image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1400&q=84",
+  },
+  {
+    tab: { zh: "酒店与食堂", en: "Hotels & Canteens" },
+    title: { zh: "酒店与食堂：按用量安排周期供货", en: "Scheduled supply for hotels and canteens" },
+    text: {
+      zh: "根据酒店餐饮、学校食堂和企业食堂的品类、规格与使用周期，协助安排备货、替换方案及配送时间。",
+      en: "Supply planning based on categories, specifications, consumption cycles, substitutions, and delivery schedules for hotels, schools, and corporate canteens.",
+    },
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=84",
+  },
+  {
+    tab: { zh: "船运公司", en: "Shipping Companies" },
+    title: { zh: "船舶补给：配合靠港时间准备物资", en: "Ship provision aligned with port schedules" },
+    text: {
+      zh: "为停靠新加坡港口的船舶准备蔬果、主副食品、调料及厨房用品，并配合船运公司确认数量与交付安排。",
+      en: "Produce, staple foods, seasonings, and kitchen supplies prepared for vessels calling at Singapore ports, with quantities and delivery coordinated with shipping companies.",
+    },
+    image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1400&q=84",
+  },
+  {
+    tab: { zh: "超市与零售", en: "Retail & Supermarkets" },
+    title: { zh: "零售供应：重视规格、包装与新鲜度", en: "Retail supply focused on quality and presentation" },
+    text: {
+      zh: "面向超市、零售门店及社区采购需求，按商品规格、包装方式、批量和交付频率进行供应沟通。",
+      en: "Supply coordination for supermarkets, retail outlets, and community buyers based on product specifications, packaging, volume, and delivery frequency.",
+    },
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=84",
+  },
+  {
+    tab: { zh: "企业与加工", en: "Corporate & Processing" },
+    title: { zh: "企业采购：灵活处理定制订单", en: "Flexible procurement for corporate requirements" },
+    text: {
+      zh: "为企业客户及食品加工相关客户提供多品类询价、组合采购和定制订单跟进，具体供应方案按实际需求确认。",
+      en: "Multi-category quotations, combined procurement, and custom order follow-up for corporate and food-processing customers, confirmed according to actual requirements.",
+    },
+    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1400&q=84",
+  },
+];
+
+const homePartners = [
+  {
+    name: { zh: "绿茶餐厅", en: "Green Tea Restaurant" },
+    logo: "/images/partners/green-tea.png",
+    logoClass: "green-tea",
+  },
+  {
+    name: { zh: "太二酸菜鱼", en: "Tai Er Sauerkraut Fish" },
+    logo: "/images/partners/tai-er.png",
+    logoClass: "tai-er",
+  },
+  {
+    name: { zh: "客语", en: "Hakka Yu" },
+    logo: "/images/partners/hakka-yu.webp",
+    logoClass: "hakka-yu",
+  },
+  {
+    name: { zh: "呷哺呷哺", en: "Xiabu Xiabu" },
+    logo: "/images/partners/xiabu-xiabu.png",
+    logoClass: "xiabu-xiabu",
+  },
+  {
+    name: { zh: "莆田", en: "PUTIEN" },
+    logo: "/images/partners/putien.png",
+    logoClass: "putien",
+  },
+];
+
+const homePartnerRows = [0, 2, 4].map((offset) => [
+  ...homePartners.slice(offset),
+  ...homePartners.slice(0, offset),
+]);
 
 const homeServices = [
   {
@@ -349,13 +679,15 @@ const uiCopy = {
     heroImageAlt: "餐饮厨房正在准备新鲜食材",
     heroBadge: "餐饮供应 · 船舶补给 · 及时配送",
     homeOverviewLabel: "网站主要页面",
-    homeIntroEyebrow: "ABOUT TIAN YI",
-    homeIntroTitle: "专注新加坡餐饮与船舶食品供应链服务",
+    homeIntroTitle: "公司简介",
     homeIntroText:
-      "添億公司以食品及厨房用品供应为核心，连接本地餐饮客户、船运公司和可靠采购渠道，提供从询价、备货到配送交付的一站式支持。",
-    homeVideoEyebrow: "BRAND VIDEO",
-    homeVideoTitle: "视频展示位置",
-    homeVideoText: "这里预留企业介绍视频或仓储配送视频位置，后续可替换为真实视频文件或 YouTube/Vimeo 链接。",
+      "TIAN YI INTERNATIONAL TRADING PTE. LTD（添億公司）成立于2023年，是一家位于新加坡的综合型食品及厨房用品供应公司，专注为本地餐饮企业及船运公司提供稳定、便捷、高效的一站式采购与配送服务。",
+    homeBusinessTitle: "业务范围",
+    homeBusinessContact: "联系我们",
+    homeBusinessPrev: "上一项业务",
+    homeBusinessNext: "下一项业务",
+    homePartnersTitle: "合作伙伴",
+    homePartnersLabel: "合作伙伴滚动展示",
     homeServicesEyebrow: "SOLUTIONS",
     homeServicesTitle: "一站式食品及厨房用品供应方案",
     homeProductsEyebrow: "CATEGORY",
@@ -365,11 +697,11 @@ const uiCopy = {
     homeContactTitle: "与 TIAN YI 建立供应合作",
     homeContactText: "如需稳定供货、船舶补给或厨房用品采购报价，欢迎通过邮箱联系我们。",
     homeContactButton: "发送询价邮件",
-    // 页脚联系信息：地址、电话和二维码准备完成后，可在此处统一替换展示文案。
-    footerContactTitle: "联系方式",
+    // 页脚联系信息：中英文界面共用同一组新加坡办公室资料。
+    footerContactTitle: "联系我们",
     footerOfficeTitle: "新加坡办公室",
-    footerAddress: "办公地址：待补充",
-    footerPhone: "电话：待补充",
+    footerAddress: "办公地址：Blk 6 #01-228 Pasir Panjang Wholesale Centre Singapore 110006",
+    footerPhone: "电话：90182456",
     footerBusinessEmail: "业务咨询：tianyi011224@gmail.com",
     footerWhatsapp: "WhatsApp\n二维码",
     footerWechat: "微信\n二维码",
@@ -377,6 +709,12 @@ const uiCopy = {
     footerCopyright: "版权所有©2026 TIAN YI INTERNATIONAL TRADING PTE. LTD 保留所有权利",
     shopSummary: "进入商品页面，按分类挑选商品并提交采购订单。",
     templateEyebrow: "公司信息",
+    aboutUsTitle: "关于我们",
+    productRangeHeroTitle: "产品与服务",
+    productRangePanelTitle: "多品类一站式供应",
+    productRangeIntro:
+      "TIAN YI 为新加坡餐饮、船舶及企业客户供应新鲜蔬果、肉类、海鲜、调味品、干货和厨房用品，并可根据日常用量、菜单需求及配送周期组合采购。",
+    productRangeNote: "具体品牌、产地、等级、包装和规格，以当日供应情况及报价确认为准。",
     pending: "请邮件确认",
     productEyebrow: "在线选购",
     productTitle: "精选商品与组合采购",
@@ -439,13 +777,15 @@ const uiCopy = {
     heroImageAlt: "A commercial kitchen preparing fresh ingredients",
     heroBadge: "F&B Supply · Ship Provision · Timely Delivery",
     homeOverviewLabel: "Main website pages",
-    homeIntroEyebrow: "ABOUT TIAN YI",
-    homeIntroTitle: "Food supply chain services for F&B and vessels in Singapore",
+    homeIntroTitle: "Company Profile",
     homeIntroText:
-      "TIAN YI focuses on food and kitchen supply services, connecting local F&B customers, shipping companies, and practical procurement channels with one-stop support from enquiry and preparation to delivery.",
-    homeVideoEyebrow: "BRAND VIDEO",
-    homeVideoTitle: "Video Placeholder",
-    homeVideoText: "This space is reserved for a company introduction, warehouse, or delivery video. It can later be replaced with a real video file or an embedded YouTube/Vimeo link.",
+      "Founded in 2023, TIAN YI INTERNATIONAL TRADING PTE. LTD is a Singapore-based food and kitchen supply company providing stable, convenient, and efficient one-stop procurement and delivery services for local F&B businesses and shipping companies.",
+    homeBusinessTitle: "Business Scope",
+    homeBusinessContact: "Contact Us",
+    homeBusinessPrev: "Previous business area",
+    homeBusinessNext: "Next business area",
+    homePartnersTitle: "Partners",
+    homePartnersLabel: "Scrolling partner showcase",
     homeServicesEyebrow: "SOLUTIONS",
     homeServicesTitle: "One-stop food and kitchen supply solutions",
     homeProductsEyebrow: "CATEGORY",
@@ -456,15 +796,22 @@ const uiCopy = {
     homeContactText: "Contact us for stable supply, ship provision, or kitchen goods procurement quotations.",
     homeContactButton: "Send Enquiry Email",
     // 英文页脚文案与中文版字段保持一一对应，避免切换语言时出现内容缺失。
-    footerContactTitle: "Contact",
+    footerContactTitle: "Contact Us",
     footerOfficeTitle: "Singapore Office",
-    footerAddress: "Office address: To be added",
-    footerPhone: "Phone: To be added",
+    footerAddress: "Office address: Blk 6 #01-228 Pasir Panjang Wholesale Centre Singapore 110006",
+    footerPhone: "Phone: 90182456",
     footerBusinessEmail: "Business enquiry: tianyi011224@gmail.com",
     footerWhatsapp: "WhatsApp\nQR Code",
     footerWechat: "WeChat\nQR Code",
     footerContactButton: "Contact Us",
     footerCopyright: "Copyright © 2026 TIAN YI INTERNATIONAL TRADING PTE. LTD. All rights reserved.",
+    aboutUsTitle: "About Us",
+    productRangeHeroTitle: "Products & Services",
+    productRangePanelTitle: "One-stop Multi-category Supply",
+    productRangeIntro:
+      "TIAN YI supplies fresh produce, meat, seafood, seasonings, dry goods, and kitchen essentials for F&B, vessel, and corporate customers in Singapore, with procurement tailored to usage, menu, and delivery cycles.",
+    productRangeNote:
+      "Brand, origin, grade, packaging, and specification are subject to daily availability and quotation confirmation.",
     shopSummary: "Browse products by category, add items to cart, and submit a purchase enquiry.",
     templateEyebrow: "Company Information",
     pending: "Confirm by email",
@@ -996,9 +1343,9 @@ type PublicPage =
   | "home"
   | "company"
   | "product-range"
-  | "advantages"
-  | "clients"
-  | "contact"
+  | "join-us"
+  | "customer-application"
+  | "supplier-application"
   | "shop";
 
 function getPublicPage(): PublicPage {
@@ -1007,13 +1354,13 @@ function getPublicPage(): PublicPage {
       return "company";
     case "/product-range":
       return "product-range";
-    case "/advantages":
-    case "/services":
-      return "advantages";
-    case "/clients":
-      return "clients";
+    case "/join-us":
     case "/contact":
-      return "contact";
+      return "join-us";
+    case "/customer-application":
+      return "customer-application";
+    case "/supplier-application":
+      return "supplier-application";
     case "/shop":
       return "shop";
     default:
@@ -1028,13 +1375,18 @@ function App() {
 
   const page = getPublicPage();
   const isHome = page === "home";
+  const isCustomerApplication = page === "customer-application";
+  const isPartnershipApplication =
+    isCustomerApplication || page === "supplier-application";
   const showShop = ENABLE_ONLINE_SHOP && page === "shop";
   const activeCompanyModule = companyProfileModules.find(
     (module) => module.slug === page,
   );
   const [language, setLanguage] = useState<Language>(() => readLanguage());
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [activeBusinessIndex, setActiveBusinessIndex] = useState(0);
   const copy = uiCopy[language];
+  const activeBusinessScope = homeBusinessScopes[activeBusinessIndex];
   const languageLabels =
     language === "zh"
       ? { zh: "中文", en: "英文" }
@@ -1046,6 +1398,9 @@ function App() {
   const [cart, setCart] = useState<CartState>(() => readCart());
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [submitState, setSubmitState] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [partnershipSubmitState, setPartnershipSubmitState] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
   const [lastOrderNumber, setLastOrderNumber] = useState("");
@@ -1204,9 +1559,51 @@ function App() {
     }
   }
 
+  // 合作申请通过 Netlify Forms 提交，客户与供应商数据分别归档。
+  async function handlePartnershipSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const encodedData = new URLSearchParams();
+
+    formData.forEach((value, key) => {
+      encodedData.append(key, String(value));
+    });
+    setPartnershipSubmitState("sending");
+
+    try {
+      const response = await fetch("/api/partnership-applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...Object.fromEntries(formData.entries()),
+          applicationType: isCustomerApplication ? "customer" : "supplier",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Partnership form submission failed");
+      }
+
+      // 邮件发送成功后再同步到 Netlify Forms，便于在控制台保留申请记录。
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodedData.toString(),
+      }).catch(() => undefined);
+
+      form.reset();
+      setPartnershipSubmitState("sent");
+    } catch {
+      setPartnershipSubmitState("error");
+    }
+  }
+
   return (
     <main>
-      <section className={`top-band ${isHome ? "home-band" : "inner-band"}`}>
+      <section
+        className={`top-band ${isHome ? "home-band" : isPartnershipApplication ? "application-top-band" : "inner-band"} ${page === "company" ? "company-profile-band" : page === "product-range" ? "product-range-band" : page === "join-us" ? "join-us-band" : ""}`}
+      >
         <header className="site-header">
           <a
             className="brand"
@@ -1285,14 +1682,25 @@ function App() {
           )}
         </header>
 
-        {isHome ? (
+        {isPartnershipApplication ? null : isHome ? (
           <div className="hero hero-home">
-            <div
-              className="hero-media-placeholder"
-              role="img"
-              aria-label={copy.homeVideoTitle}
-            >
-              <span>{copy.homeVideoTitle}</span>
+            <div className="hero-media-placeholder">
+              {/* 背景视频必须静音才能在主流手机和桌面浏览器中自动播放。 */}
+              <video
+                className="hero-video"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+                tabIndex={-1}
+              >
+                <source
+                  src="/videos/fruit-vegetable-hero.mp4"
+                  type="video/mp4"
+                />
+              </video>
             </div>
             <div className="hero-overlay">
               <div className="hero-copy">
@@ -1310,38 +1718,298 @@ function App() {
             </div>
           </div>
         ) : (
-          <div className="hero hero-inner">
-            <p className="eyebrow">TIAN YI INTERNATIONAL TRADING PTE. LTD</p>
-            <h1>{activeCompanyModule?.title[language] ?? copy.heroTitle}</h1>
-            <p>{activeCompanyModule?.summary[language] ?? copy.heroDescription}</p>
+          <div
+            className={`hero hero-inner ${page === "company" ? "company-profile-hero" : page === "product-range" ? "product-range-hero" : page === "join-us" ? "join-us-hero" : ""}`}
+          >
+            {page === "company" ? (
+              <h1>{copy.aboutUsTitle}</h1>
+            ) : page === "product-range" ? (
+              <h1>{copy.productRangeHeroTitle}</h1>
+            ) : page === "join-us" ? (
+              <h1>{activeCompanyModule?.title[language]}</h1>
+            ) : (
+              <>
+                <p className="eyebrow">TIAN YI INTERNATIONAL TRADING PTE. LTD</p>
+                <h1>{activeCompanyModule?.title[language] ?? copy.heroTitle}</h1>
+                <p>{activeCompanyModule?.summary[language] ?? copy.heroDescription}</p>
+              </>
+            )}
           </div>
         )}
       </section>
 
+      {isPartnershipApplication && (
+        <section
+          className="partnership-application-page"
+          aria-labelledby="partnership-application-title"
+        >
+          <header className="partnership-application-heading">
+            {isCustomerApplication ? (
+              <UsersRound size={66} strokeWidth={1.9} aria-hidden="true" />
+            ) : (
+              <Truck size={66} strokeWidth={1.9} aria-hidden="true" />
+            )}
+            <h1 id="partnership-application-title">
+              {isCustomerApplication
+                ? language === "zh"
+                  ? "成为 TIAN YI 的客户"
+                  : "Become a TIAN YI Customer"
+                : language === "zh"
+                  ? "成为 TIAN YI 的供应商"
+                  : "Become a TIAN YI Supplier"}
+            </h1>
+            <p>
+              {isCustomerApplication
+                ? language === "zh"
+                  ? "想了解更多关于 TIAN YI 的食品与厨房用品供应服务？请填写以下资料，让我们与您联系。"
+                  : "Want to learn more about TIAN YI's food and kitchen supply services? Complete the form and our team will contact you."
+                : language === "zh"
+                  ? "希望与 TIAN YI 建立稳定的供应合作？请填写以下资料，让我们进一步了解您的产品与供货能力。"
+                  : "Interested in building a stable supply partnership with TIAN YI? Tell us about your products and supply capabilities."}
+            </p>
+          </header>
+
+          {partnershipSubmitState === "sent" ? (
+            <div className="partnership-form-result" role="status">
+              <CheckCircle2 size={48} aria-hidden="true" />
+              <h2>{language === "zh" ? "提交成功" : "Application Submitted"}</h2>
+              <p>
+                {language === "zh"
+                  ? "感谢您提交资料，TIAN YI 工作人员会在审核后与您联系。"
+                  : "Thank you. The TIAN YI team will review your details and contact you."}
+              </p>
+              <a href="/join-us">
+                {language === "zh" ? "返回加入我们" : "Back to Join Us"}
+              </a>
+            </div>
+          ) : (
+            <form
+              className="partnership-form"
+              name={
+                isCustomerApplication
+                  ? "customer-partnership"
+                  : "supplier-partnership"
+              }
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              onSubmit={handlePartnershipSubmit}
+            >
+              <input
+                type="hidden"
+                name="form-name"
+                value={
+                  isCustomerApplication
+                    ? "customer-partnership"
+                    : "supplier-partnership"
+                }
+              />
+              <input
+                type="hidden"
+                name="applicationType"
+                value={isCustomerApplication ? "customer" : "supplier"}
+              />
+              <label className="hidden-field">
+                Do not fill this out
+                <input name="bot-field" />
+              </label>
+
+              <label>
+                <span><b>*</b>{language === "zh" ? "公司名称" : "Company Name"}</span>
+                <input
+                  name="companyName"
+                  type="text"
+                  autoComplete="organization"
+                  placeholder={language === "zh" ? "请输入" : "Enter company name"}
+                  required
+                />
+              </label>
+
+              {isCustomerApplication ? (
+                <label>
+                  <span><b>*</b>{language === "zh" ? "公司类型" : "Company Type"}</span>
+                  <select name="companyType" defaultValue="" required>
+                    <option value="" disabled>{language === "zh" ? "请选择" : "Select an option"}</option>
+                    <option value="restaurant">{language === "zh" ? "餐厅或餐饮企业" : "Restaurant or F&B business"}</option>
+                    <option value="hotel-canteen">{language === "zh" ? "酒店或食堂" : "Hotel or canteen"}</option>
+                    <option value="shipping">{language === "zh" ? "船运公司" : "Shipping company"}</option>
+                    <option value="retail">{language === "zh" ? "零售或超市" : "Retail or supermarket"}</option>
+                    <option value="other">{language === "zh" ? "其他" : "Other"}</option>
+                  </select>
+                </label>
+              ) : (
+                <label>
+                  <span><b>*</b>{language === "zh" ? "供应品类" : "Supply Category"}</span>
+                  <select name="supplierCategory" defaultValue="" required>
+                    <option value="" disabled>{language === "zh" ? "请选择" : "Select an option"}</option>
+                    <option value="produce">{language === "zh" ? "水果与蔬菜" : "Fruit and vegetables"}</option>
+                    <option value="meat-seafood">{language === "zh" ? "肉类与海鲜" : "Meat and seafood"}</option>
+                    <option value="dry-goods">{language === "zh" ? "调味品与干货" : "Seasonings and dry goods"}</option>
+                    <option value="kitchen-supplies">{language === "zh" ? "厨房用品" : "Kitchen supplies"}</option>
+                    <option value="other">{language === "zh" ? "其他" : "Other"}</option>
+                  </select>
+                </label>
+              )}
+
+              <label>
+                <span><b>*</b>{language === "zh" ? "地址" : "Address"}</span>
+                <input
+                  name="address"
+                  type="text"
+                  autoComplete="street-address"
+                  placeholder={language === "zh" ? "请输入" : "Enter address"}
+                  required
+                />
+              </label>
+
+              <label>
+                <span><b>*</b>{language === "zh" ? "您的姓名" : "Your Name"}</span>
+                <input
+                  name="contactName"
+                  type="text"
+                  autoComplete="name"
+                  placeholder={language === "zh" ? "请输入" : "Enter your name"}
+                  required
+                />
+              </label>
+
+              <label>
+                <span><b>*</b>{language === "zh" ? "电话号码" : "Phone Number"}</span>
+                <input
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder={language === "zh" ? "请输入" : "Enter phone number"}
+                  required
+                />
+              </label>
+
+              <label>
+                <span>
+                  <b>*</b>
+                  {isCustomerApplication
+                    ? language === "zh" ? "月采购金额" : "Estimated Monthly Purchase"
+                    : language === "zh" ? "可供应区域" : "Supply Region"}
+                </span>
+                <input
+                  name={isCustomerApplication ? "monthlyPurchase" : "supplyRegion"}
+                  type="text"
+                  placeholder={
+                    isCustomerApplication
+                      ? language === "zh" ? "例如：SGD 5,000" : "For example: SGD 5,000"
+                      : language === "zh" ? "例如：新加坡、中国、马来西亚" : "For example: Singapore, China, Malaysia"
+                  }
+                  required
+                />
+              </label>
+
+              <label>
+                <span><b>*</b>{language === "zh" ? "电子邮箱" : "Email Address"}</span>
+                <input
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder={language === "zh" ? "请输入" : "Enter email address"}
+                  required
+                />
+              </label>
+
+              {partnershipSubmitState === "error" && (
+                <p className="partnership-form-error" role="alert">
+                  {language === "zh"
+                    ? "暂时无法提交，请稍后重试或发送邮件至 tianyi011224@gmail.com。"
+                    : "Unable to submit right now. Please try again or email tianyi011224@gmail.com."}
+                </p>
+              )}
+
+              <button
+                className="partnership-submit-button"
+                type="submit"
+                disabled={partnershipSubmitState === "sending"}
+              >
+                {partnershipSubmitState === "sending"
+                  ? language === "zh" ? "提交中..." : "Submitting..."
+                  : language === "zh" ? "提交" : "Submit"}
+              </button>
+            </form>
+          )}
+        </section>
+      )}
+
       {isHome && (
         <>
-          <section className="home-intro" aria-label={copy.homeOverviewLabel}>
-            <div>
-              <p className="eyebrow">{copy.homeIntroEyebrow}</p>
-              <h2>{copy.homeIntroTitle}</h2>
+          <section className="home-company-section" aria-labelledby="home-company-title">
+            <header className="home-company-heading">
+              <h2 id="home-company-title">{copy.homeIntroTitle}</h2>
               <p>{copy.homeIntroText}</p>
-            </div>
-            <div className="home-intro-placeholder" aria-hidden="true">
-              <span>TIAN YI</span>
+            </header>
+            <div className="home-company-grid">
+              {homeCompanyHighlights.map((item) => (
+                <article className="home-company-card" key={item.label.zh}>
+                  <img src={item.image} alt="" />
+                  <div>
+                    <strong>{item.value[language]}</strong>
+                    <span>{item.label[language]}</span>
+                  </div>
+                </article>
+              ))}
             </div>
           </section>
 
-          <section className="home-video-section">
-            <div>
-              <p className="eyebrow">{copy.homeVideoEyebrow}</p>
-              <h2>{copy.homeVideoTitle}</h2>
-              <p>{copy.homeVideoText}</p>
+          <section className="home-business-section" aria-labelledby="home-business-title">
+            <h2 id="home-business-title">{copy.homeBusinessTitle}</h2>
+            <div className="home-business-tabs" role="tablist" aria-label={copy.homeBusinessTitle}>
+              {homeBusinessScopes.map((item, index) => (
+                <button
+                  className={index === activeBusinessIndex ? "active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={index === activeBusinessIndex}
+                  onClick={() => setActiveBusinessIndex(index)}
+                  key={item.tab.zh}
+                >
+                  {item.tab[language]}
+                </button>
+              ))}
             </div>
-            <div className="video-placeholder" aria-label={copy.homeVideoTitle}>
-              <span>
-                <ChevronRight size={34} aria-hidden="true" />
-              </span>
+            <div className="home-business-carousel">
+              <button
+                className="business-arrow previous"
+                type="button"
+                title={copy.homeBusinessPrev}
+                aria-label={copy.homeBusinessPrev}
+                onClick={() =>
+                  setActiveBusinessIndex((current) =>
+                    (current - 1 + homeBusinessScopes.length) % homeBusinessScopes.length,
+                  )
+                }
+              >
+                <ChevronLeft size={30} aria-hidden="true" />
+              </button>
+              <article className="home-business-panel">
+                <img src={activeBusinessScope.image} alt="" />
+                <div>
+                  <h3>{activeBusinessScope.title[language]}</h3>
+                  <p>{activeBusinessScope.text[language]}</p>
+                </div>
+              </article>
+              <button
+                className="business-arrow next"
+                type="button"
+                title={copy.homeBusinessNext}
+                aria-label={copy.homeBusinessNext}
+                onClick={() =>
+                  setActiveBusinessIndex((current) =>
+                    (current + 1) % homeBusinessScopes.length,
+                  )
+                }
+              >
+                <ChevronRight size={30} aria-hidden="true" />
+              </button>
             </div>
+            <a className="home-business-contact" href="mailto:tianyi011224@gmail.com">
+              {copy.homeBusinessContact}
+            </a>
           </section>
 
           <section className="home-section">
@@ -1398,11 +2066,219 @@ function App() {
               <ChevronRight size={18} aria-hidden="true" />
             </a>
           </section>
+
+          <section className="home-partners-section" aria-labelledby="home-partners-title">
+            <h2 id="home-partners-title">{copy.homePartnersTitle}</h2>
+            <div className="home-partners-window" aria-label={copy.homePartnersLabel}>
+              {homePartnerRows.map((partnerRow, rowIndex) => (
+                <div className="home-partners-marquee" key={rowIndex}>
+                  <div className="home-partners-track">
+                    {[0, 1].map((groupIndex) => (
+                      <div
+                        className="home-partners-group"
+                        aria-hidden={groupIndex === 1}
+                        key={groupIndex}
+                      >
+                        {partnerRow.map((partner) => (
+                          <div
+                            className={`home-partner-item ${partner.logoClass}`}
+                            key={partner.name.zh}
+                          >
+                            <img src={partner.logo} alt={partner.name[language]} loading="lazy" />
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         </>
       )}
 
       {activeCompanyModule && (
         <>
+      {activeCompanyModule.slug === "company" ? (
+        <>
+          <section
+            className="company-profile-section"
+            id="company"
+            aria-labelledby="company-title"
+          >
+            <article className="company-profile-panel">
+              <h2 id="company-title">{activeCompanyModule.title[language]}</h2>
+              {activeCompanyModule.content?.[language].map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </article>
+          </section>
+          <section className="company-purpose-section" aria-label={copy.aboutUsTitle}>
+            <div className="company-purpose-grid">
+              {companyPurposeCards.map((card) => (
+                <article className="company-purpose-card" key={card.title.zh}>
+                  <h2>{card.title[language]}</h2>
+                  {card.body ? <p>{card.body[language]}</p> : null}
+                  {card.items ? (
+                    <ul>
+                      {card.items.map((item) => (
+                        <li key={item.zh}>{item[language]}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </section>
+          <section className="company-source-section" aria-labelledby="company-source-title">
+            <header className="company-source-heading">
+              <p className="eyebrow">SOURCE &amp; QUALITY</p>
+              <h2 id="company-source-title">
+                {language === "zh" ? "优质产地，鲜达新加坡" : "Quality Origins, Freshly Supplied to Singapore"}
+              </h2>
+              <p>
+                {language === "zh"
+                  ? "以下为可根据季节、市场供应及客户需求组织的常见采购产区示例。每批产品的实际产地、品牌、等级与规格，以报价和订单确认结果为准。"
+                  : "These are examples of common sourcing regions that may be arranged according to season, market availability, and customer requirements. Actual origin, brand, grade, and specification are confirmed with each quotation and order."}
+              </p>
+            </header>
+            <div className="company-source-grid">
+              {companySourceHighlights.map((item) => (
+                <article className="company-source-card" key={item.origin.zh}>
+                  <img src={item.image} alt="" loading="lazy" />
+                  <div>
+                    <span>{item.origin[language]}</span>
+                    <h3>{item.products[language]}</h3>
+                    <p>{item.benefit[language]}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </>
+      ) : activeCompanyModule.slug === "product-range" ? (
+        <>
+          <section
+            className="product-range-section"
+            id="product-range"
+            aria-labelledby="product-range-title"
+          >
+            <div className="product-range-panel">
+              <header>
+                <h2 id="product-range-title">{copy.productRangePanelTitle}</h2>
+                <p>{copy.productRangeIntro}</p>
+                <small>{copy.productRangeNote}</small>
+              </header>
+              <div className="product-range-catalog">
+                {productRangeCatalog.map((item) => (
+                  <article className="product-range-item" key={item.name.zh}>
+                    <img src={item.image} alt="" loading="lazy" />
+                    <h3>{item.name[language]}</h3>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+          <section className="supply-chain-section" aria-labelledby="supply-chain-title">
+            <h2 id="supply-chain-title">
+              {language === "zh" ? "供应链服务" : "Supply Chain Services"}
+            </h2>
+            <div className="supply-chain-grid">
+              {supplyChainServices.map((service) => (
+                <article className="supply-chain-card" key={service.title.zh}>
+                  <img src={service.image} alt="" loading="lazy" />
+                  <div>
+                    <h3>{service.title[language]}</h3>
+                    <p>{service.text[language]}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </>
+      ) : activeCompanyModule.slug === "join-us" ? (
+      <>
+        <section
+          className="join-us-section"
+          id="join-us"
+          aria-labelledby="join-us-title"
+        >
+          <div className="join-us-panel">
+            <h2 className="sr-only" id="join-us-title">
+              {activeCompanyModule.title[language]}
+            </h2>
+            <div className="join-us-grid">
+              {activeCompanyModule.fields.map((field) => (
+                <article className="join-us-detail" key={field.zh}>
+                  <h3>{field[language]}</h3>
+                  <p>{field.value?.[language] ?? copy.pending}</p>
+                </article>
+              ))}
+            </div>
+            {activeCompanyModule.cta && (
+              <a
+                className="join-us-cta"
+                href={`mailto:tianyi011224@gmail.com?subject=${encodeURIComponent(
+                  language === "zh"
+                    ? "应聘 TIAN YI"
+                    : "Application to Join TIAN YI",
+                )}`}
+              >
+                {activeCompanyModule.cta[language]}
+                <ChevronRight size={17} aria-hidden="true" />
+              </a>
+            )}
+          </div>
+        </section>
+
+        <section
+          className="join-us-partner-section"
+          aria-labelledby="join-us-partner-title"
+        >
+          <div className="join-us-partner-inner">
+            <h2 id="join-us-partner-title">
+              {language === "zh" ? "成为我们的合作伙伴" : "Partner with Us"}
+            </h2>
+            <div className="join-us-partner-grid">
+              <a
+                className="join-us-partner-card"
+                href="/customer-application"
+              >
+                <Handshake size={52} strokeWidth={1.8} aria-hidden="true" />
+                <strong>
+                  {language === "zh"
+                    ? "成为 TIAN YI 的客户"
+                    : "Become a TIAN YI Customer"}
+                  <ChevronRight size={18} aria-hidden="true" />
+                </strong>
+                <span>
+                  {language === "zh"
+                    ? "一站式食品与厨房用品采购"
+                    : "One-stop food and kitchen supply"}
+                </span>
+              </a>
+              <a
+                className="join-us-partner-card"
+                href="/supplier-application"
+              >
+                <Truck size={52} strokeWidth={1.8} aria-hidden="true" />
+                <strong>
+                  {language === "zh"
+                    ? "成为 TIAN YI 的供应商"
+                    : "Become a TIAN YI Supplier"}
+                  <ChevronRight size={18} aria-hidden="true" />
+                </strong>
+                <span>
+                  {language === "zh"
+                    ? "携手拓展稳定、长期的供应合作"
+                    : "Build stable, long-term supply partnerships"}
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </>
+      ) : (
       <section className="template-section" id="company" aria-labelledby="company-title">
         <div className="section-heading compact">
           <div>
@@ -1448,6 +2324,7 @@ function App() {
           })}
         </div>
       </section>
+      )}
         </>
       )}
 
@@ -1559,9 +2436,7 @@ function App() {
             <a href="/">{copy.homeLabel}</a>
             {companyProfileModules
               .filter((module) =>
-                ["company", "product-range", "advantages", "contact"].includes(
-                  module.slug,
-                ),
+                ["company", "product-range", "join-us"].includes(module.slug),
               )
               .map((module) => (
                 <a href={`/${module.slug}`} key={module.slug}>
